@@ -2,7 +2,13 @@
 
 CodePath WEB103 Final Project
 
-Designed and developed by: [your names here]
+Designed and developed by: 
+  Damaris Campos
+  Amanda Gray
+  Sergio Montufar
+  Nathachanok Netmaneesuk
+  Beatrice Olaosebikan
+  Danielle Phillips
 
 🔗 Link to deployed app:
 
