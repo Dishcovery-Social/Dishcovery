@@ -1,0 +1,6 @@
+#!/bin/sh
+git fetch --prune
+gone=$(git branch -vv | awk '/: gone]/ {print $1}')
+if [ -n "$gone" ]; then
+  printf "%s\n" "$gone" | xargs git branch -d
+fi

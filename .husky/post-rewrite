@@ -1,0 +1,9 @@
+#!/bin/sh
+# Only run cleanup if the rewrite event was a rebase
+if [ "$1" = "rebase" ]; then
+  git fetch --prune
+  gone=$(git branch -vv | awk '/: gone]/ {print $1}')
+  if [ -n "$gone" ]; then
+    printf "%s\n" "$gone" | xargs git branch -d
+  fi
+fi
