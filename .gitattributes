@@ -1,0 +1,24 @@
+# Default: normalize line endings to LF on commit
+* text=auto eol=lf
+
+# Force LF for shell scripts and Husky hooks
+*.sh text eol=lf
+.husky/* text eol=lf
+
+# Force LF for source files
+*.js text eol=lf
+*.jsx text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+
+# Binaries — no line ending conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
