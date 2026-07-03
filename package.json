@@ -12,8 +12,13 @@
   },
   "scripts": {
     "dev": "concurrently \"npm run dev -w client\" \"npm run dev -w server\"",
+    "start": "concurrently \"npm run preview -w client\" \"npm run start -w server\"",
+    "preview": "npm run build -w client && npm run start",
     "check": "biome check --write .",
-    "prepare": "husky"
+    "prepare": "husky || true"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   },
   "license": "ISC",
   "author": "",
@@ -25,6 +30,7 @@
   ],
   "devDependencies": {
     "@biomejs/biome": "^2.5.2",
+    "concurrently": "^10.0.3",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8"
   },
