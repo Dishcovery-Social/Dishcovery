@@ -4,19 +4,6 @@ Reference the Writing User Stories final project guide in the course portal for 
 
 ## Outline User Roles
 
-[👉🏾👉🏾👉🏾 Include at least at least 1, but no more than 3, user roles.]
-
-## Draft User Stories
-
-[👉🏾👉🏾👉🏾 Include at least at least 10 user stories in this format:]
-
-1. As a [user role], I want to [what], so that [why].
-# User Stories
-
-Reference the Writing User Stories final project guide in the course portal for more information about how to complete each of the sections below.
-
-## Outline User Roles
-
 1. Home Cook: A user who actively creates, edits, and manages their own recipe posts to share with the community.
 2. Casual Browser: A user who visits the app to discover new meals, read recipe details, and filter the feed for specific types of food.
 
@@ -30,4 +17,4 @@ Reference the Writing User Stories final project guide in the course portal for 
 7. **Filter by Category**: As a Casual Browser, I want to filter the main feed by category, so that I can easily find specific types of food like snacks or dinners.
 8. **View Image**: As a Casual Browser, I want to see a picture of the dish on the recipe card, so that I can decide if I want to make it.
 9. **View Author**: As a Casual Browser, I want to see the author of the recipe, so that I know who created the dish.
-10. **Comment**: As a Casual Browser, I want to leave a comment on a recipe, so that I can
+10. **Comment**: As a Casual Browser, I want to leave a comment on a recipe, so that I can share my feedback with other users, let the recipe author know what I thought, and help others decide whether to try the recipe.
