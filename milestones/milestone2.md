@@ -12,7 +12,7 @@ This unit, be sure to complete all tasks listed below. To complete a task, place
   - [ ] Your entity relationship diagram should include the tables in your database.
 - [ ] Prepare your three-minute pitch presentation, to be presented during Unit 7 (the next unit).
   - [ ] You do **not** need to submit any materials in advance of your pitch.
-- [ ] In this document, complete all three questions in the **Reflection** section below
+- [x] In this document, complete all three questions in the **Reflection** section below
 
 ## Reflection
 
