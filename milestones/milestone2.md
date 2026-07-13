@@ -12,18 +12,18 @@ This unit, be sure to complete all tasks listed below. To complete a task, place
   - [ ] Your entity relationship diagram should include the tables in your database.
 - [ ] Prepare your three-minute pitch presentation, to be presented during Unit 7 (the next unit).
   - [ ] You do **not** need to submit any materials in advance of your pitch.
-- [ ] In this document, complete all three questions in the **Reflection** section below
+- [x] In this document, complete all three questions in the **Reflection** section below
 
 ## Reflection
 
 ### 1. What went well during this unit?
 
-[👉🏾👉🏾👉🏾 your answer here]
+We were able to coordinate and schedule a meeting to discuss the wireframes, relationship diagram, and project presentation.
 
 ### 2. What were some challenges your group faced in this unit?
 
-[👉🏾👉🏾👉🏾 your answer here]
+Figma wasn't letting us set up an easy way to reuse components for our high-fidelity wireframe diagrams, but we were able to find a workaround. 
 
 ### 3. What additional support will you need in upcoming units as you continue to work on your final project?
 
-[👉🏾👉🏾👉🏾 your answer here]
+More resources for collaboration on the codebase. 
