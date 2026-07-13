@@ -4,18 +4,19 @@ Reference the Creating an Entity Relationship Diagram final project guide in the
 
 ## List of Pages
 
-[👉🏾👉🏾👉🏾 List the pages you expect to have in your app, with a ⭐ next to pages you have wireframed]
+## Wireframe 1: Home Page ⭐
 
-## Wireframe 1: [page title]
+![](Wireframes/Home-Page-Desktop.png)
 
-[👉🏾👉🏾👉🏾 include wireframe 1]
 
-## Wireframe 2: [page title]
+## Wireframe 2: Details Page ⭐
 
-[👉🏾👉🏾👉🏾 include wireframe 2]
+![](Wireframes/Desktop-Recipe-Details.png)
 
-## Wireframe 3: [page title]
+## Wireframe 3: Edit Page ⭐
 
-[👉🏾👉🏾👉🏾 include wireframe 3]
+![](Wireframes/Desktop-Edit-Recipe.png)
 
-[👉🏾👉🏾👉🏾 include more wireframes as desired]
+## Wireframe 4: Profile Page ⭐
+
+![](Wireframes/Profile-Desktop.png)
