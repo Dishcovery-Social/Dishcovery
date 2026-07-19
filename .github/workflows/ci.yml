@@ -19,8 +19,8 @@ jobs:
 
       - run: npm ci
 
-      - run: npx biome check --reporter=github .
+      - run: npx biome ci .
 
       - run: npm run build -w client
 
-      - run: node --check server/server.js
+      - run: node --check server/server.ts
