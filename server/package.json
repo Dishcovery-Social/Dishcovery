@@ -2,13 +2,13 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server.ts",
   "scripts": {
-    "dev": "node --watch --env-file=.env server.js",
-    "start": "node server.js"
+    "dev": "tsx watch --env-file=.env server.ts",
+    "start": "node server.ts"
   },
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.18.0"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +16,10 @@
   "type": "module",
   "dependencies": {
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^22.15.21",
+    "tsx": "^4.19.4"
   }
 }
