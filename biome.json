@@ -6,11 +6,7 @@
 		"useIgnoreFile": true
 	},
 	"files": {
-		"includes": [
-			"**",
-			"!**/node_modules",
-			"!**/client/dist"
-		]
+		"includes": ["**", "!**/node_modules", "!**/client/dist"]
 	},
 	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"linter": {
