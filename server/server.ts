@@ -3,7 +3,7 @@ import express, { type Request, type Response } from "express";
 import recipesRouter from "./routes/recipes.js";
 
 const app = express();
-const PORT = parseInt(process.env.PORT as string) || 3000;
+const PORT = parseInt(process.env.PORT as string, 10) || 3000;
 
 app.use(express.json());
 
