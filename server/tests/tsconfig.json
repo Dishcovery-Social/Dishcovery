@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "express", "pg", "dotenv", "jest", "supertest"],
+    "isolatedModules": true
+  },
+  "include": ["**/*.ts"]
+}
