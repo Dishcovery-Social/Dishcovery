@@ -1,0 +1,13 @@
+addAssignees: author
+
+addReviewers: true
+
+numberOfReviewers: 1
+
+reviewers:
+  - 7BeatRice
+  - AAshGray
+  - Peanut16
+  - nathnet
+
+runOnDraft: true

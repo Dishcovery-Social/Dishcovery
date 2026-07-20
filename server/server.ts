@@ -8,11 +8,11 @@ const PORT = parseInt(process.env.PORT as string) || 3000;
 app.use(express.json());
 
 app.get("/", (_req: Request, res: Response) => {
-	res.send("Server is running.");
+  res.send("Server is running.");
 });
 
 app.use("/recipes", recipesRouter);
 
 app.listen(PORT, () => {
-	console.log(`Server listening on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
