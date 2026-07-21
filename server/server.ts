@@ -7,9 +7,9 @@ app.use(express.json());
 app.use(cors())
 
 app.get("/", (_req: Request, res: Response) => {
-	res.send("Server is running.");
+  res.send("Server is running.");
 });
 
 app.listen(PORT, () => {
-	console.log(`Server listening on port ${PORT}`);
+  console.log(`Server listening on port ${PORT}`);
 });
