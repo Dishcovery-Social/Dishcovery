@@ -1,6 +1,23 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito+Sans:YTLC,opsz,wdth,wght@500,6..12,100,200..1000&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .font-fredoka {
+    font-optical-sizing: auto;
+    font-variation-settings: "wdth" 100;
+  }
+
+  .font-nunito-sans {
+    font-optical-sizing: auto;
+    font-variation-settings:
+      "wdth" 100,
+      "YTLC" 500;
+  }
+}
 
 @layer base {
   body {
@@ -11,7 +28,9 @@
     @apply font-body text-ink;
   }
 
-  h1, h2, h3 {
-    @apply font-heading font-semibold;
+  h1,
+  h2,
+  h3 {
+    @apply font-heading font-medium;
   }
 }
