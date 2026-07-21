@@ -1,8 +1,17 @@
 import Navbar from "./components/Navbar.jsx";
-import "./index.css";
+import Sidebar from "./components/Sidebar.jsx";
 
 function App() {
-  return <Navbar />;
+	const [count, setCount] = useState(0);
+
+	return (
+		<>
+			<div>
+				<Navbar></Navbar>
+				<Sidebar className=""></Sidebar>
+			</div>
+		</>
+	);
 }
 
 export default App;
