@@ -1,4 +1,3 @@
-import "dotenv/config";
 import express, { type Request, type Response } from "express";
 import recipesRouter from "./routes/recipes.js";
 

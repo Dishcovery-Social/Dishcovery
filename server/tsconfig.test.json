@@ -1,7 +1,0 @@
-{
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "types": ["node", "express", "pg", "dotenv", "jest", "supertest"]
-  },
-  "include": ["**/*.ts"]
-}

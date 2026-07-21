@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 
-const mockQuery = jest.fn();
+const mockQuery = jest.fn() as jest.Mock<any>;
 
 jest.unstable_mockModule("../../config/database.js", () => ({
   pool: {
