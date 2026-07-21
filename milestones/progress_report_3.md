@@ -21,6 +21,18 @@ List the title of each issue you created, one per line:
 - Build recipe submission form component
 - Build edit recipe page
 - Add delete recipe action
+- Configure Passport GitHub strategy, session, and authenticate middleware
+- Implement GET /auth/github and GET /auth/github/callback endpoints
+- Implement POST /auth/logout endpoint
+- Implement GET /auth/me endpoint
+- Add auth state and protected routes
+- Implement GET /recipes/:id/comments endpoint
+- Implement POST /recipes/:id/comments endpoint
+- Implement DELETE /comments/:id endpoint
+- Add category filter to GET /recipes
+- Build Comments section on Recipe Detail page
+- Add category filter UI to Home Page
+- Create GET /categories endpoint
 
 ## GitHub Milestones Created
 List the name of each GitHub Milestone you created, one per line:
@@ -31,7 +43,7 @@ List the name of each GitHub Milestone you created, one per line:
 - Milestone 5 - Unit 9
 
 ## Milestone 3 Completion
-Completion percentage for Milestone 3 - Unit 7: 10%
+Completion percentage for Milestone 3 - Unit 7: 0%
 List each issue you completed this unit and the main file or folder where that work lives, one per line:
 - Example: User login - server/routes/auth.js
 - 
