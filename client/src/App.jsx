@@ -1,12 +1,10 @@
 import { useState } from "react";
-import heroImg from "./assets/hero.png";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "./assets/vite.svg";
-import "./App.css";
+import Navbar from "./components/Navbar.jsx";
 
 function App() {
   const [count, setCount] = useState(0);
 
+<<<<<<< HEAD
   return (
     <>
       <section id="center">
@@ -125,6 +123,15 @@ function App() {
       <section id="spacer"></section>
     </>
   );
+=======
+	return (
+		<>
+			<div>
+				<Navbar></Navbar>
+			</div>
+		</>
+	);
+>>>>>>> abfe374 (chore: update devDependencies to include autoprefixer and postcss)
 }
 
 export default App;
