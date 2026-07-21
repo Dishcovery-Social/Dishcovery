@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "dev": "tsx watch --env-file=.env server.ts",
+    "dev": "tsx --env-file=.env --watch server.ts",
     "start": "node server.ts"
   },
   "engines": {
