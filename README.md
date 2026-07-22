@@ -3,14 +3,12 @@
 CodePath WEB103 Final Project
 
 Designed and developed by:
-- Damaris Campos
 - Amanda Gray
-- Sergio Montufar
 - Nathachanok Netmaneesuk
 - Beatrice Olaosebikan
 - Danielle Phillips
 
-🔗 Link to deployed app:
+🔗 Link to deployed app: https://dishcovery-bog9.onrender.com
 
 ## About
 
