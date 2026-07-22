@@ -51,4 +51,4 @@ Ref recipe_comment: comment.recipe_id > recipe.id
 
 ## Add the Entity Relationship Diagram  
 
-![ERD](<erd>.png>)
+![ERD](<erd.png>)
