@@ -1,9 +1,9 @@
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar.jsx";
+import Sidebar from "../components/Sidebar.jsx";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div>
+    <div className="">
       <Navbar />
       <Sidebar />
     </div>
