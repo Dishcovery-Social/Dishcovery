@@ -20,9 +20,9 @@ const userData: userDataType[] = JSON.parse(String(userFile)) as userDataType[]
 const dropAllTables = async() => {
     const dropAllTablesQuery =  `
     DROP TABLE IF EXISTS recipe_categories;
+    DROP TABLE IF EXISTS recipes;
     DROP TABLE IF EXISTS categories;
     DROP TABLE IF EXISTS comments;
-    DROP TABLE IF EXISTS recipies;
     DROP TABLE IF EXISTS users;
     `
     try{
@@ -112,12 +112,64 @@ const seedCategoriesTable = async() => {
   
 }
 
+const createRecipeTable = async() => {
+    const createRecipeTableQuery = `
+    CREATE TABLE IF NOT EXISTS recipes(
+        id serial PRIMARY KEY,
+        title varchar(500) NOT NULL,
+        ingredients json[] NOT NULL,
+        instructions text NOT NULL,
+        image text NOT NULL,
+        user_id integer NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT now(),
+        FOREIGN KEY(user_id) REFERENCES users(id)
+    )
+    `
+    try{
+        const res = await pool.query(createRecipeTableQuery)
+        console.log("Recipes table created sucessfully")
+    }
+    catch(error){
+        console.error("Error creating recipes table: ", error)
+    }
+}
+
+const seedRecipeTable = async() => {
+    recipe_data.forEach(recipe =>{
+        const seedRecipeTableQuery = `
+        INSERT INTO recipes(title, ingredients, instructions, image, user_id, created_at)
+         VALUES ($1, $2, $3, $4, $5, $6)
+        `
+        const values = [
+            recipe.title,
+            recipe.ingredients,
+            recipe.instructions,
+            recipe.image,
+            recipe.user_id,
+            recipe.created_at
+
+        ]
+        pool.query(seedRecipeTableQuery, values, (err, res) =>{
+            if (err){
+                console.error("Error inseting recipe: ", err)
+                return
+            }
+            console.log(`${recipe.title} added successfully`)
+
+        })
+
+    })
+}
+
+
 const resetDatabase = async() => {
     await dropAllTables()
     await createUserTable()
     await seedUserTable()
     await createCategoriesTable()
     await seedCategoriesTable()
+    await createRecipeTable()
+    await seedRecipeTable()
 }
 
 resetDatabase()

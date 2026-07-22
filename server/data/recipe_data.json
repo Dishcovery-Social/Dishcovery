@@ -1,7 +1,7 @@
 [
   {
     "title": "Spicy Beef Stir Fry",
-    "Ingredients": [
+    "ingredients": [
       {
         "name": "doubanjiang",
         "quantity": 2,
@@ -121,7 +121,7 @@
   },
   {
   "title": "Kung Pao Cauliflower",
-  "Ingredients": [
+  "ingredients": [
     {
       "name": "sweet chili sauce",
       "quantity": 0.25,
@@ -206,7 +206,7 @@
 },
 {
   "title": "Slow Cooker Chicken Chili",
-  "Ingredients": [
+  "ingredients": [
     {
       "name": "vegetable oil",
       "quantity": 1,
@@ -322,7 +322,7 @@
 
 {
   "title": "Make-Ahead Spinach and Mushroom Breakfast Sandwiches",
-  "Ingredients": [
+  "ingredients": [
     {
       "name": "nonstick cooking spray",
       "quantity": 1,
@@ -387,7 +387,7 @@
 },
 {
   "title": "Blueberry Oatmeal Pancakes",
-  "Ingredients": [
+  "ingredients": [
     {
       "name": "rolled oats",
       "quantity": 1,
