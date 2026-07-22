@@ -1,4 +1,4 @@
-export interface categoryDataType{
-    "id": number,
-    "name": string
+export interface categoryDataType {
+  id: number;
+  name: string;
 }

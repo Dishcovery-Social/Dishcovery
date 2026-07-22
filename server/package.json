@@ -7,7 +7,6 @@
     "dev": "tsx --env-file=.env --watch server.ts",
     "start": "npm run reset && nodemon --require dotenv/config server.ts",
     "reset": "cd config && tsx --require dotenv/config reset.js"
-
   },
   "engines": {
     "node": ">=22.18.0"
