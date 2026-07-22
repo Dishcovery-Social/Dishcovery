@@ -3,14 +3,16 @@ import './dotenv.js'
 import { fileURLToPath} from 'url' 
 import path, {dirname} from 'path'
 import { userDataType } from '../types/users.js'
+import { categoryDataType } from '../types/category.js'
 import fs from 'fs'
+import { recipeDataType } from '../types/recipe.js'
 
 const currentPath = fileURLToPath(import.meta.url)
 const recipeFile  = fs.readFileSync(path.join(dirname(currentPath), '../data/recipe_data.json'))
-const recipe_data = JSON.parse(String(recipeFile))
+const recipe_data : recipeDataType[] = JSON.parse(String(recipeFile)) as recipeDataType[]
 
 const categoryFile  = fs.readFileSync(path.join(dirname(currentPath), '../data/category_data.json'))
-const category_data = JSON.parse(String(categoryFile))
+const category_data : categoryDataType[] = JSON.parse(String(categoryFile)) as categoryDataType[]
 
 const userFile = fs.readFileSync(path.join(dirname(currentPath), '../data/user_data.json'))
 const userData: userDataType[] = JSON.parse(String(userFile)) as userDataType[] 
@@ -60,24 +62,62 @@ const seedUserTable = async() => {
           ($1, $2, $3, $4, $5)
     `
     const values = [user.id, user.github_id, user.username, user.email, user.profile_image]
-    try{
-
-        const res = pool.query(insertUserTableQuery, values)
-    }
-    catch(error){
-        console.log("Error seeding user table: ", error)
-    }
-
+         pool.query(insertUserTableQuery, values, (err, res) =>{
+            if (err){
+                console.error("Error inseting user: ", err)
+                return
+            }
+            console.log(`${user.username} added successfully`)
+        })
         
     });
-    console.log("Seeded user table!")
+   
 
+}
+const createCategoriesTable = async() => {
+    const createCategoriesTableQuery = `
+        CREATE TABLE IF NOT EXISTS categories(
+            id serial PRIMARY KEY,
+            name varchar(100) NOT NULL
+        )
+    `
+    try{
+        const res = await pool.query(createCategoriesTableQuery)
+        console.log("Categories table created sucessfully")
+    }
+    catch(error){
+        console.log("Failed to create categories table: ", error)
+    }
+}
+
+const seedCategoriesTable = async() => {
+    category_data.forEach( category => {
+          
+        const seedCategoriesTableQuery = `
+        INSERT INTO categories (id, name) VALUES ($1, $2) 
+        `
+        const values = [
+            category.id,
+            category.name
+        ]
+        pool.query(seedCategoriesTableQuery, values, (err, res) =>{
+            if (err){
+                console.error("Error inseting category: ", err)
+                return
+            }
+            console.log(`${category.name} added successfully`)
+        })
+
+    })
+  
 }
 
 const resetDatabase = async() => {
     await dropAllTables()
     await createUserTable()
     await seedUserTable()
+    await createCategoriesTable()
+    await seedCategoriesTable()
 }
 
 resetDatabase()
