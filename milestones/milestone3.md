@@ -42,7 +42,7 @@ The biggest challenge was breaking down tasks into small, single-purpose issues 
 
 ### 3. Did you finish all of your tasks in your sprint plan for this week? If you did not finish all of the planned tasks, how would you prioritize the remaining tasks on your list?
 
-[👉🏾👉🏾👉🏾 your answer here]
+We did not complete all planned tasks this sprint. Coordination was difficult due to scheduling conflicts and reviews take longer than expected. We will carry the remaining tasks to the next week and prioritize them at the start of the sprint.  
 
 ### 4. Which features and user stories would you consider “at risk”? How will you change your plan if those items remain “at risk”?
 

@@ -43,12 +43,14 @@ List the name of each GitHub Milestone you created, one per line:
 - Milestone 5 - Unit 9
 
 ## Milestone 3 Completion
-Completion percentage for Milestone 3 - Unit 7: 0%
+Completion percentage for Milestone 3 - Unit 7: 11%
 List each issue you completed this unit and the main file or folder where that work lives, one per line:
-- Example: User login - server/routes/auth.js
-- 
+- Provide resources to navigate automated checks - root and .github/
+- Build navigation bar component - client/src/components/Navbar.jsx - awaiting final reviews and merge
+- Build sidebar component - client/src/components/Sidebar.jsx - awaiting final reviews and merge
+- Create GET /recipes endpoint - server/controllers, repositories, and routes - awaiting dependency
+- Set up database schema and seed data - server/config, data, and types - awaiting reviews
 
 ## Features Completed This Unit
 List each feature you completed and checked off in readme.md this unit, one per line:
-- Example: Search events by category
-- 
+- Recipe feed rendering - 50%
