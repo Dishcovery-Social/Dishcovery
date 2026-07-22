@@ -1,30 +1,51 @@
+import SearchIcon from "../assets/Search-Icon.svg";
+
+function handleSignIn() {
+  console.log("Sign In clicked");
+}
+
+function handleSignUp() {
+  console.log("Sign Up clicked");
+}
+
 export default function Navbar() {
-	return (
-		<header className="flex left-0 right-0 top-0 items-center absolute justify-between bg-primary p-5">
-			<h1 className="font-heading text-secondary text-lg pl-3">
-				Recipe Tracker
-			</h1>
-			<div className="flex gap-5 items-center">
-				<div>
-					<form className="flex flex-row bg-accent rounded-full">
-						<img
-							className="p-1 min-w-5 pl-5"
-							src="../src/assets/Search Icon.svg"
-							alt=""
-						/>
-						<input
-							className="w-full pr-4 pt-2 pb-2 min-w-52 text-center bg-accent rounded-full"
-							type="search"
-							name="q"
-							value="Search Recipe Tracker..."
-						/>
-					</form>
-				</div>
-				<div className="flex flex-row gap-6 pr-2">
-					<p className="text-secondary">Sign In</p>
-					<p className="text-secondary">Sign Up</p>
-				</div>
-			</div>
-		</header>
-	);
+  return (
+    <header className="flex left-0 right-0 top-0 items-center absolute justify-between bg-primary p-5 font-heading font-medium">
+      <span className="font-heading text-secondary text-lg pl-3">
+        Dishcovery
+      </span>
+      <div className="flex gap-5 items-center">
+        <div>
+          <form
+            className="flex flex-row bg-accent rounded-full"
+            onSubmit={(event) => event.preventDefault()}
+          >
+            <img className="p-1 min-w-5 pl-5" src={SearchIcon} alt="" />
+            <input
+              className="w-full pr-4 pt-2 pb-2 min-w-52 text-left bg-accent rounded-full font-body placeholder-ink"
+              type="search"
+              name="q"
+              placeholder="Search Recipe Tracker..."
+            />
+          </form>
+        </div>
+        <nav className="flex flex-row gap-6 pr-2">
+          <button
+            type="button"
+            className="text-secondary bg-transparent border-none p-0 cursor-pointer"
+            onClick={handleSignIn}
+          >
+            Sign In
+          </button>
+          <button
+            type="button"
+            className="text-secondary bg-transparent border-none p-0 cursor-pointer"
+            onClick={handleSignUp}
+          >
+            Sign Up
+          </button>
+        </nav>
+      </div>
+    </header>
+  );
 }
