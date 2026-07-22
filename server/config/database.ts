@@ -7,5 +7,3 @@ export const pool = new Pool({
     rejectUnauthorized: false,
   },
 });
-
-export default pool;
