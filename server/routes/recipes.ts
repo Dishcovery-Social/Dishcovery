@@ -1,7 +1,7 @@
-import express, { type Router } from "express";
+import { Router } from "express";
 import * as RecipesController from "../controllers/recipesController.js";
 
-const router: Router = express.Router();
+const router: Router = Router();
 
 // GET /recipes
 router.get("/", RecipesController.getAllRecipes);

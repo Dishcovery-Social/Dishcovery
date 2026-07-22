@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
+import type { Recipe } from "../../types/recipe.js";
 
-const mockQuery = jest.fn() as jest.Mock<any>;
+const mockQuery = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 
 jest.unstable_mockModule("../../config/database.js", () => ({
   pool: {
@@ -18,9 +19,29 @@ describe("getAllRecipes", () => {
   });
 
   it("returns all recipes from the database", async () => {
-    const mockRows = [
-      { id: 1, name: "Pancakes" },
-      { id: 2, name: "Waffles" },
+    const mockRows: Recipe[] = [
+      {
+        id: 1,
+        title: "Pancakes",
+        ingredients: [
+          { name: "Flour", quantity: "2", unit: "cups" },
+          { name: "Milk", quantity: "1.5", unit: "cups" },
+        ],
+        instructions: "Mix and cook on a griddle.",
+        image: "pancakes.jpg",
+        user_id: 1,
+      },
+      {
+        id: 2,
+        title: "Waffles",
+        ingredients: [
+          { name: "Flour", quantity: "2", unit: "cups" },
+          { name: "Eggs", quantity: "2", unit: "whole" },
+        ],
+        instructions: "Mix and cook in a waffle iron.",
+        image: "waffles.jpg",
+        user_id: 1,
+      },
     ];
 
     mockQuery.mockResolvedValue({ rows: mockRows });
@@ -37,5 +58,16 @@ describe("getAllRecipes", () => {
     mockQuery.mockRejectedValue(new Error("DB connection failed"));
 
     await expect(getAllRecipes()).rejects.toThrow("DB connection failed");
+  });
+
+  it("returns an empty array when there are no recipes", async () => {
+    mockQuery.mockResolvedValue({ rows: [] });
+
+    const result = await getAllRecipes();
+
+    expect(mockQuery).toHaveBeenCalledWith(
+      "SELECT * FROM recipes ORDER BY id ASC",
+    );
+    expect(result).toEqual([]);
   });
 });

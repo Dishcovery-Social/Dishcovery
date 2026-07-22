@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx --env-file=.env --watch server.ts",
     "start": "node server.ts",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' node --env-file=.env ../node_modules/.bin/jest"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules node --env-file=.env ../node_modules/.bin/jest"
   },
   "engines": {
     "node": ">=22.18.0"
@@ -24,6 +24,7 @@
     "@types/node": "^22.15.21",
     "@types/pg": "^8.20.0",
     "@types/supertest": "^7.2.1",
+    "cross-env": "^10.1.0",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
