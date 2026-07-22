@@ -25,6 +25,8 @@
 
 ## 3. Pull Requests
 
-1. Push your branch to GitHub and open a PR against `main`.
+1. Push your branch to GitHub and open a **Draft PR** against `main` — this triggers CI without notifying reviewers.
 2. Fill out the PR template details.
-3. If working asynchronously, you may review your own code and click **Squash and Merge** to keep the history linear and clean.
+3. Check the **Checks** tab to confirm CI passes. See [TROUBLESHOOTING.md](TROUBLESHOOTING.md) if anything fails.
+4. Once CI passes, mark as **Ready for Review**.
+5. Once approved, click **Squash and Merge** to keep the history linear and clean.
