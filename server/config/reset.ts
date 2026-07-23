@@ -1,24 +1,24 @@
 import { pool } from "./database.js";
-import "./dotenv.js";
+
 import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import type { categoryDataType } from "../types/category.js";
 import type { recipeDataType } from "../types/recipe.js";
-import type { userDataType } from "../types/users.js";
+import type { userDataType } from "../types/user.js";
 
 const currentPath = fileURLToPath(import.meta.url);
 const recipeFile = fs.readFileSync(
   path.join(dirname(currentPath), "../data/recipe_data.json"),
 );
-const recipe_data: recipeDataType[] = JSON.parse(
+const recipeData: recipeDataType[] = JSON.parse(
   String(recipeFile),
 ) as recipeDataType[];
 
 const categoryFile = fs.readFileSync(
   path.join(dirname(currentPath), "../data/category_data.json"),
 );
-const category_data: categoryDataType[] = JSON.parse(
+const categoryData: categoryDataType[] = JSON.parse(
   String(categoryFile),
 ) as categoryDataType[];
 
@@ -101,7 +101,7 @@ const createCategoriesTable = async () => {
 };
 
 const seedCategoriesTable = async () => {
-  category_data.forEach((category) => {
+  categoryData.forEach((category) => {
     const seedCategoriesTableQuery = `
         INSERT INTO categories (id, name) VALUES ($1, $2) 
         `;
@@ -138,7 +138,7 @@ const createRecipeTable = async () => {
 };
 
 const seedRecipeTable = async () => {
-  recipe_data.forEach((recipe) => {
+  recipeData.forEach((recipe) => {
     const seedRecipeTableQuery = `
         INSERT INTO recipes(title, ingredients, instructions, image, user_id, created_at)
          VALUES ($1, $2, $3, $4, $5, $6)
@@ -202,7 +202,8 @@ const createRecipesCategoriesTable = async () => {
 };
 
 const resetDatabase = async () => {
-  await dropAllTables();
+  try{
+    await dropAllTables();
   await createUserTable();
   await seedUserTable();
   await createCategoriesTable();
@@ -211,6 +212,12 @@ const resetDatabase = async () => {
   await seedRecipeTable();
   await createRecipesCategoriesTable();
   await createCommentsTable();
+  }
+  finally {
+  pool.end();
+}
+  
 };
+
 
 resetDatabase();
