@@ -35,9 +35,6 @@
     "lint-staged": "^17.0.8"
   },
   "lint-staged": {
-    "**/*.{js,jsx,ts,tsx}": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
-  },
-  "dependencies": {
-    "react-router-dom": "^7.18.1"
+    "*": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
   }
 }
