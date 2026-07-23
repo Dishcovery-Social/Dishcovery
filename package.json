@@ -29,12 +29,13 @@
     "server"
   ],
   "devDependencies": {
-    "@biomejs/biome": "^2.5.2",
+    "@biomejs/biome": "2.5.4",
     "concurrently": "^10.0.3",
     "husky": "^9.1.7",
     "lint-staged": "^17.0.8"
   },
   "lint-staged": {
     "*": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
-  }
+  },
+  "dependencies": {}
 }
