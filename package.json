@@ -36,8 +36,5 @@
   },
   "lint-staged": {
     "*": "biome check --write --no-errors-on-unmatched --files-ignore-unknown=true"
-  },
-  "dependencies": {
-    "react-router-dom": "^7.18.1"
   }
 }
