@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["node", "express", "pg", "jest", "supertest"],
+    "types": ["node", "express", "pg", "jest"],
     "isolatedModules": true
   },
   "include": ["**/*.ts"]
