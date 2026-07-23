@@ -1,16 +1,16 @@
 import SearchIcon from "../assets/Search-Icon.svg";
 
-function handleSignIn() {
-  console.log("Sign In clicked");
-}
-
 function handleSignUp() {
   console.log("Sign Up clicked");
 }
 
+function handleSignIn() {
+  console.log("Sign In clicked");
+}
+
 export default function Navbar() {
   return (
-    <header className="flex left-0 right-0 top-0 items-center absolute justify-between bg-primary p-5 font-heading font-medium">
+    <header className="flex items-center justify-between bg-primary p-5 font-heading font-medium">
       <span className="font-heading text-secondary text-lg pl-3">
         Dishcovery
       </span>
@@ -20,12 +20,16 @@ export default function Navbar() {
             className="flex flex-row bg-accent rounded-full"
             onSubmit={(event) => event.preventDefault()}
           >
-            <img className="p-1 min-w-5 pl-5" src={SearchIcon} alt="" />
+            <img
+              className="p-1 min-w-5 pl-5"
+              src={SearchIcon}
+              alt="Search icon"
+            />
             <input
               className="w-full pr-4 pt-2 pb-2 min-w-52 text-left bg-accent rounded-full font-body placeholder-ink"
               type="search"
               name="q"
-              placeholder="Search Recipe Tracker..."
+              placeholder="Search Dishcovery..."
             />
           </form>
         </div>

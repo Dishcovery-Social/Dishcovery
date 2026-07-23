@@ -1,14 +1,14 @@
 {
-  "name": "web103_finalproject",
+  "name": "dishcovery",
   "version": "1.0.0",
-  "description": "TBD",
-  "homepage": "https://github.com/nathnet/web103_finalproject#readme",
+  "description": "Dishcovery is a social media application for sharing and discovering home-cooked meals. It allows users to log their recipes, categorize their ingredients, and interact with a community of food lovers by liking, saving, and commenting on posts.",
+  "homepage": "https://github.com/Dishcovery-Social/Dishcovery#readme",
   "bugs": {
-    "url": "https://github.com/nathnet/web103_finalproject/issues"
+    "url": "https://github.com/Dishcovery-Social/Dishcovery/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nathnet/web103_finalproject.git"
+    "url": "git+https://github.com/Dishcovery-Social/Dishcovery.git"
   },
   "scripts": {
     "dev": "concurrently \"npm run dev -w client\" \"npm run dev -w server\"",
