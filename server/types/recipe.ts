@@ -1,4 +1,4 @@
-export interface recipeDataType {
+export interface recipe {
   title: string;
   ingredients: Ingredient[];
   instructions: string;

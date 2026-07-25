@@ -1,4 +1,4 @@
-export interface userDataType {
+export interface user {
   id: number;
   github_id: number;
   username: string;

@@ -1,31 +1,35 @@
-import { pool } from "./database.js";
-
 import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
-import type { categoryDataType } from "../types/category.js";
-import type { recipeDataType } from "../types/recipe.js";
-import type { userDataType } from "../types/user.js";
+import type { category } from "../types/category.js";
+import type { recipe } from "../types/recipe.js";
+import type { recipeCategory } from "../types/recipeCategory.js";
+import type { user } from "../types/user.js";
+import { pool } from "./database.js";
 
 const currentPath = fileURLToPath(import.meta.url);
 const recipeFile = fs.readFileSync(
   path.join(dirname(currentPath), "../data/recipe_data.json"),
 );
-const recipeData: recipeDataType[] = JSON.parse(
-  String(recipeFile),
-) as recipeDataType[];
+
+const recipeData: recipe[] = JSON.parse(String(recipeFile)) as recipe[];
 
 const categoryFile = fs.readFileSync(
   path.join(dirname(currentPath), "../data/category_data.json"),
 );
-const categoryData: categoryDataType[] = JSON.parse(
-  String(categoryFile),
-) as categoryDataType[];
+const categoryData: category[] = JSON.parse(String(categoryFile)) as category[];
+
+const recipeCategoryFile = fs.readFileSync(
+  path.join(dirname(currentPath), "../data/recipe_category_data.json"),
+);
+const recipeCategoryData: recipeCategory[] = JSON.parse(
+  String(recipeCategoryFile),
+) as recipeCategory[];
 
 const userFile = fs.readFileSync(
   path.join(dirname(currentPath), "../data/user_data.json"),
 );
-const userData: userDataType[] = JSON.parse(String(userFile)) as userDataType[];
+const userData: user[] = JSON.parse(String(userFile)) as user[];
 
 const dropAllTables = async () => {
   const dropAllTablesQuery = `
@@ -64,7 +68,7 @@ const createUserTable = async () => {
 };
 
 const seedUserTable = async () => {
-  userData.forEach((user) => {
+  const promises = userData.map(async (user) => {
     const insertUserTableQuery = `
           INSERT INTO users(id, github_id, username, email, profile_image) VALUES
           ($1, $2, $3, $4, $5)
@@ -76,14 +80,14 @@ const seedUserTable = async () => {
       user.email,
       user.profile_image,
     ];
-    pool.query(insertUserTableQuery, values, (err, res) => {
-      if (err) {
-        console.error("Error inseting user: ", err);
-        return;
-      }
+    try {
+      await pool.query(insertUserTableQuery, values);
       console.log(`${user.username} added successfully`);
-    });
+    } catch (err) {
+      console.error("Error inseting user: ", err);
+    }
   });
+  await Promise.all(promises);
 };
 const createCategoriesTable = async () => {
   const createCategoriesTableQuery = `
@@ -101,19 +105,20 @@ const createCategoriesTable = async () => {
 };
 
 const seedCategoriesTable = async () => {
-  categoryData.forEach((category) => {
+  const promises = categoryData.map(async (category) => {
     const seedCategoriesTableQuery = `
         INSERT INTO categories (id, name) VALUES ($1, $2) 
         `;
     const values = [category.id, category.name];
-    pool.query(seedCategoriesTableQuery, values, (err, res) => {
-      if (err) {
-        console.error("Error inseting category: ", err);
-        return;
-      }
+
+    try {
+      await pool.query(seedCategoriesTableQuery, values);
       console.log(`${category.name} added successfully`);
-    });
+    } catch (err) {
+      console.error("Error inseting category: ", err);
+    }
   });
+  await Promise.all(promises);
 };
 
 const createRecipeTable = async () => {
@@ -138,7 +143,7 @@ const createRecipeTable = async () => {
 };
 
 const seedRecipeTable = async () => {
-  recipeData.forEach((recipe) => {
+  const promises = recipeData.map(async (recipe) => {
     const seedRecipeTableQuery = `
         INSERT INTO recipes(title, ingredients, instructions, image, user_id, created_at)
          VALUES ($1, $2, $3, $4, $5, $6)
@@ -151,14 +156,15 @@ const seedRecipeTable = async () => {
       recipe.user_id,
       recipe.created_at,
     ];
-    pool.query(seedRecipeTableQuery, values, (err, res) => {
-      if (err) {
-        console.error("Error inseting recipe: ", err);
-        return;
-      }
+
+    try {
+      pool.query(seedRecipeTableQuery, values);
       console.log(`${recipe.title} added successfully`);
-    });
+    } catch (err) {
+      console.error("Error inseting recipe: ", err);
+    }
   });
+  await Promise.all(promises);
 };
 
 const createCommentsTable = async () => {
@@ -201,23 +207,38 @@ const createRecipesCategoriesTable = async () => {
   }
 };
 
-const resetDatabase = async () => {
-  try{
-    await dropAllTables();
-  await createUserTable();
-  await seedUserTable();
-  await createCategoriesTable();
-  await seedCategoriesTable();
-  await createRecipeTable();
-  await seedRecipeTable();
-  await createRecipesCategoriesTable();
-  await createCommentsTable();
-  }
-  finally {
-  pool.end();
-}
-  
+const seedRecipeCategoriesTable = async () => {
+  const promises = recipeCategoryData.map(async (recipeCategory) => {
+    const seedRecipeCategoriesTableQuery = `
+        INSERT INTO recipes_categories (category_id, recipe_id) VALUES ($1, $2) 
+        `;
+    const values = [recipeCategory.category_id, recipeCategory.recipe_id];
+
+    try {
+      await pool.query(seedRecipeCategoriesTableQuery, values);
+      console.log(`${recipeCategory.category_id} added successfully`);
+    } catch (err) {
+      console.error("Error inseting recipe_category: ", err);
+    }
+  });
+  await Promise.all(promises);
 };
 
+const resetDatabase = async () => {
+  try {
+    await dropAllTables();
+    await createUserTable();
+    await seedUserTable();
+    await createCategoriesTable();
+    await seedCategoriesTable();
+    await createRecipeTable();
+    await seedRecipeTable();
+    await createRecipesCategoriesTable();
+    await createCommentsTable();
+    await seedRecipeCategoriesTable();
+  } finally {
+    pool.end();
+  }
+};
 
 resetDatabase();
