@@ -11,19 +11,12 @@ const verify = async (
 ) => {
   const { id, username, profileUrl, emails } = profile;
   try {
-    const github_id = id;
-    const user = await UsersRepository.getUserByGitHubId(github_id);
-
-    if (!user) {
-      const newUser = await UsersRepository.createUser({
-        github_id,
-        username: username ?? `user_${id}`,
-        email: emails?.[0]?.value ?? null,
-        profile_image: profileUrl,
-      });
-
-      return done(null, newUser);
-    }
+    const user = await UsersRepository.upsertUser({
+      github_id: id,
+      username: username ?? `user_${id}`,
+      email: emails?.[0]?.value ?? null,
+      profile_image: profileUrl,
+    });
 
     return done(null, user);
   } catch (error) {

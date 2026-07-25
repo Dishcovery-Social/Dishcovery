@@ -10,20 +10,14 @@ export const getUserById = async (id: number): Promise<User | undefined> => {
   return results.rows[0];
 };
 
-export const getUserByGitHubId = async (
-  github_id: string,
-): Promise<User | undefined> => {
-  const results = await pool.query<User>(
-    "SELECT * FROM users WHERE github_id = $1",
-    [github_id],
-  );
-  return results.rows[0];
-};
-
-export const createUser = async (user: UserInsert): Promise<User> => {
+export const upsertUser = async (user: UserInsert): Promise<User> => {
   const results = await pool.query<User>(
     `INSERT INTO users (github_id, username, email, profile_image)
      VALUES ($1, $2, $3, $4)
+     ON CONFLICT (github_id) DO UPDATE
+     SET username = EXCLUDED.username,
+         email = EXCLUDED.email,
+         profile_image = EXCLUDED.profile_image
      RETURNING *`,
     [user.github_id, user.username, user.email, user.profile_image],
   );
