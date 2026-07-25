@@ -1,10 +1,22 @@
 import { pool } from "../config/database.js";
 import type { User } from "../types/user.js";
 
-export const getUserByGitHubId = async (id: bigint): Promise<User> => {
+type UserInsert = Omit<User, "id" | "created_at">;
+
+export const getUserByGitHubId = async (github_id: bigint): Promise<User> => {
   const results = await pool.query<User>(
     "SELECT * FROM users WHERE github_id = $1",
-    [id],
+    [github_id],
+  );
+  return results.rows[0];
+};
+
+export const createUser = async (user: UserInsert): Promise<User> => {
+  const results = await pool.query<User>(
+    `INSERT INTO users (github_id, username, email, profile_image)
+     VALUES ($1, $2, $3, $4)
+     RETURNING *`,
+    [user.github_id, user.username, user.email, user.profile_image],
   );
   return results.rows[0];
 };
