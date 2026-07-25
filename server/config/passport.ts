@@ -16,7 +16,7 @@ const verify = async (
 
     if (!user) {
       const newUser = await UsersRepository.createUser({
-        github_id: github_id,
+        github_id,
         username: username ?? `user_${id}`,
         email: emails?.[0]?.value ?? null,
         profile_image: profileUrl,
