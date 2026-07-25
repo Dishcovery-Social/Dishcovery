@@ -31,9 +31,5 @@
   h2,
   h3 {
     @apply font-heading font-medium;
-  h1,
-  h2,
-  h3 {
-    @apply font-heading font-medium;
   }
 }
