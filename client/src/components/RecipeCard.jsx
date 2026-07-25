@@ -6,7 +6,7 @@ export default function RecipeCard({
   username,
   recipeId,
   title,
-  description,
+  instructions,
   recipeImageUrl,
 }) {
   return (
@@ -19,11 +19,7 @@ export default function RecipeCard({
         />
         <span>{username}</span>
       </div>
-      <Link
-        to={`/recipes/${recipeId}`}
-        aria-label={`View recipe: ${title}`}
-        className="flex flex-col gap-2 pb-6"
-      >
+      <div className="flex flex-col gap-2 pb-6">
         <img
           src={recipeImageUrl}
           className="w-full h-64 object-cover"
@@ -31,16 +27,26 @@ export default function RecipeCard({
         />
         <div className="flex flex-col gap-2 px-6">
           <p className="ml-4 text-2xl font-bold">{title}</p>
-          <p className="line-clamp-5 leading-tight">{description}</p>
+          <p className="line-clamp-5 leading-tight">{instructions}</p>
           <div className="flex items-center mt-4">
-            <span>See Ingredients...</span>
-            <div className="flex items-center gap-2 ml-auto mr-8">
+            <Link
+              to={`/recipes/${recipeId}`}
+              aria-label={`View recipe: ${title}`}
+              className="font-bold"
+            >
+              See Recipe Details
+            </Link>
+            <Link
+              to={`/recipes/${recipeId}`}
+              aria-label={`View recipe: ${title}`}
+              className="flex items-center gap-2 ml-auto mr-8"
+            >
               <img src={CommentIcon} className="w-5 h-5" alt="" />
               <span>0</span>
-            </div>
+            </Link>
           </div>
         </div>
-      </Link>
+      </div>
     </div>
   );
 }
