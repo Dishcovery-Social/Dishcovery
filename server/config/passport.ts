@@ -11,7 +11,7 @@ const verify = async (
 ) => {
   const { id, username, profileUrl, emails } = profile;
   try {
-    const github_id = BigInt(id);
+    const github_id = id;
     const user = await UsersRepository.getUserByGitHubId(github_id);
 
     if (!user) {

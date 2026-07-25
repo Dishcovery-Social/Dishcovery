@@ -11,7 +11,7 @@ export const getUserById = async (id: number): Promise<User | undefined> => {
 };
 
 export const getUserByGitHubId = async (
-  github_id: bigint,
+  github_id: string,
 ): Promise<User | undefined> => {
   const results = await pool.query<User>(
     "SELECT * FROM users WHERE github_id = $1",
