@@ -41,7 +41,7 @@ const dropAllTables = async () => {
  
     `;
   try {
-    const res = await pool.query(dropAllTablesQuery);
+    await pool.query(dropAllTablesQuery);
     console.log("Successfully dropped all tables");
   } catch (error) {
     console.error("Failed to dropp all tables: ", error);
@@ -60,7 +60,7 @@ const createUserTable = async () => {
     )
     `;
   try {
-    const res = await pool.query(createUserTableQuery);
+    await pool.query(createUserTableQuery);
     console.log("User table created successfully");
   } catch (error) {
     console.error("Error creating user table: ", error);
@@ -97,7 +97,7 @@ const createCategoriesTable = async () => {
         )
     `;
   try {
-    const res = await pool.query(createCategoriesTableQuery);
+    await pool.query(createCategoriesTableQuery);
     console.log("Categories table created sucessfully");
   } catch (error) {
     console.log("Failed to create categories table: ", error);
@@ -135,7 +135,7 @@ const createRecipeTable = async () => {
     )
     `;
   try {
-    const res = await pool.query(createRecipeTableQuery);
+    await pool.query(createRecipeTableQuery);
     console.log("Recipes table created sucessfully");
   } catch (error) {
     console.error("Error creating recipes table: ", error);
@@ -181,7 +181,7 @@ const createCommentsTable = async () => {
     )
     `;
   try {
-    const res = await pool.query(createCommentsTableQuery);
+    await pool.query(createCommentsTableQuery);
     console.log("Comments table created sucessfully");
   } catch (error) {
     console.error("Error creating comments table: ", error);
