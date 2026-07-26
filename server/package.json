@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx --env-file=.env --watch server.ts",
     "start": "node dist/server.js",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc",
     "clean": "rm -rf dist",
     "reset": "tsx --env-file=.env config/reset.ts",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest"
@@ -40,6 +40,7 @@
     "cross-env": "^10.1.0",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.11",
-    "tsx": "^4.19.4"
+    "tsx": "^4.19.4",
+    "typescript": "^6.0.3"
   }
 }
