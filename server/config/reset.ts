@@ -1,6 +1,6 @@
-import fs from "fs";
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path, { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { category } from "../types/category.js";
 import type { Recipe } from "../types/recipe.js";
 import type { recipeCategory } from "../types/recipeCategory.js";
@@ -200,7 +200,7 @@ const createRecipesCategoriesTable = async () => {
         )
     `;
   try {
-    const res = await pool.query(createRecipesCategoriesTableQuery);
+    await pool.query(createRecipesCategoriesTableQuery);
     console.log("recipes_categories table created sucessfully");
   } catch (error) {
     console.error("Error creating recipes_categories table: ", error);
