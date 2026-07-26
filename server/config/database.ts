@@ -1,9 +1,9 @@
 import pg from "pg";
 
-const { Pool } = pg;
-
-export const pool = new Pool({
+const config = {
   ssl: {
     rejectUnauthorized: false,
   },
-});
+};
+
+export const pool = new pg.Pool(config);

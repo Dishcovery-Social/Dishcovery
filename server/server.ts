@@ -1,3 +1,4 @@
+import cors from "cors";
 import express, { type Request, type Response } from "express";
 import recipesRouter from "./routes/recipes.js";
 
@@ -5,6 +6,7 @@ const app = express();
 const PORT = parseInt(process.env.PORT as string, 10) || 3000;
 
 app.use(express.json());
+app.use(cors());
 
 app.get("/", (_req: Request, res: Response) => {
   res.send("Server is running.");

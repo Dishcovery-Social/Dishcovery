@@ -1,17 +1,14 @@
-// Represents an ingredient in a recipe
-export type Ingredient = {
-  name: string;
-  quantity: string;
-  unit: string;
-};
-
-// Represents a recipe as stored in and returned from the database
-export type Recipe = {
-  id: number;
+export interface recipe {
   title: string;
   ingredients: Ingredient[];
   instructions: string;
   image: string;
   user_id: number;
-  created_at?: Date;
-};
+  category: string[];
+  created_at: string;
+}
+interface Ingredient {
+  name: string;
+  quantity: number;
+  unit: string;
+}
