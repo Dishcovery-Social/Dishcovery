@@ -1,6 +1,5 @@
 import { pool } from "../config/database.js";
 import type { Recipe } from "../types/recipe.js";
-import { camelizeKeys } from "./shared.js";
 
 export const getAllRecipes = async (): Promise<Recipe[]> => {
   const results = await pool.query(
@@ -13,7 +12,7 @@ export const getAllRecipes = async (): Promise<Recipe[]> => {
     GROUP BY recipes.id
     ORDER BY recipes.id ASC`,
   );
-  return camelizeKeys<Recipe[]>(results.rows);
+  return results.rows;
 };
 
 export const getRecipeById = async (id: number): Promise<Recipe | null> => {
@@ -29,5 +28,5 @@ export const getRecipeById = async (id: number): Promise<Recipe | null> => {
     `,
     [id],
   );
-  return camelizeKeys<Recipe | null>(result.rows[0] ?? null);
+  return result.rows[0] ?? null;
 };

@@ -1,4 +1,5 @@
-export function camelizeKeys<T = unknown>(obj: unknown): T {
+xport;
+function camelizeKeys<T = unknown>(obj: unknown): T {
   if (Array.isArray(obj)) {
     return obj.map((item) => camelizeKeys(item)) as T;
   } else if (Buffer.isBuffer(obj)) {
