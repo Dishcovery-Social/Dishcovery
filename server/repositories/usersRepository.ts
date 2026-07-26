@@ -3,7 +3,16 @@ import type { User } from "../types/user.js";
 
 type UserInsert = Omit<User, "id" | "created_at">;
 
-export const getUserByGitHubId = async (github_id: bigint): Promise<User> => {
+export const getUserById = async (id: number): Promise<User | undefined> => {
+  const results = await pool.query<User>("SELECT * FROM users WHERE id = $1", [
+    id,
+  ]);
+  return results.rows[0];
+};
+
+export const getUserByGitHubId = async (
+  github_id: bigint,
+): Promise<User | undefined> => {
   const results = await pool.query<User>(
     "SELECT * FROM users WHERE github_id = $1",
     [github_id],

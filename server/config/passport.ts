@@ -1,14 +1,13 @@
 import passport from "passport";
 import { Strategy as GitHubStrategy, type Profile } from "passport-github2";
 import * as UsersRepository from "../repositories/usersRepository.js";
-import type { User } from "../types/user.js";
 import { env } from "./env.js";
 
 const verify = async (
   _accessToken: string,
   _refreshToken: string,
   profile: Profile,
-  done: (error: unknown, user?: User | false) => void,
+  done: (error: unknown, user?: Express.User | false) => void,
 ) => {
   const { id, username, profileUrl, emails } = profile;
   try {
@@ -41,4 +40,24 @@ passport.use(
     },
     verify,
   ),
+);
+
+passport.serializeUser(
+  (user: Express.User, done: (error: unknown, id?: number) => void): void => {
+    done(null, user.id);
+  },
+);
+
+passport.deserializeUser(
+  async (
+    id: number,
+    done: (error: unknown, user?: Express.User | false) => void,
+  ) => {
+    try {
+      const user = await UsersRepository.getUserById(id);
+      done(null, user);
+    } catch (error) {
+      done(error);
+    }
+  },
 );
