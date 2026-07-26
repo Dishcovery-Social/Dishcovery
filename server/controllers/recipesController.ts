@@ -15,11 +15,13 @@ export const getRecipeById = async (
 ): Promise<void> => {
   const id = parseInt(request.params.id as string, 10);
   if (Number.isNaN(id)) {
+    console.log(`Invalid recipe ID: ${request.params.id}`);
     response.status(400).json({ error: "Invalid recipe ID" });
   }
   const recipe = await RecipesRepository.getRecipeById(id);
   if (!recipe) {
-    response.status(404).json({ error: "Recipe not found" });
+    console.log(`Recipe not found: ${id}`);
+    response.status(404).json({ error: `Recipe not found: ${id}` });
     return;
   }
   response.status(200).json(recipe);
