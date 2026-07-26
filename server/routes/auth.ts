@@ -7,5 +7,7 @@ const router: Router = Router();
 router.get("/github", AuthController.initiateGitHubLogin);
 // Handle authentication status back from GitHub
 router.get("/github/callback", AuthController.handleGitHubCallback);
+// Handle user logout regardless of authentication method
+router.post("/logout", AuthController.handleLogout);
 
 export default router;
