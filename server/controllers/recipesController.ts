@@ -8,3 +8,18 @@ export const getAllRecipes = async (
   const recipes = await RecipesRepository.getAllRecipes();
   response.status(200).json(recipes);
 };
+
+export const getRecipeById = async (
+  request: Request,
+  response: Response,
+): Promise<void> => {
+  const id = parseInt(request.params.id as string, 10);
+  if (Number.isNaN(id)) {
+    throw new Error("Invalid recipe ID");
+  }
+  const recipe = await RecipesRepository.getRecipeById(id);
+  if (!recipe) {
+    throw new Error("Recipe not found");
+  }
+  response.status(200).json(recipe);
+};
