@@ -18,20 +18,6 @@
   }
 }
 
-@layer utilities {
-  .font-fredoka {
-    font-optical-sizing: auto;
-    font-variation-settings: "wdth" 100;
-  }
-
-  .font-nunito-sans {
-    font-optical-sizing: auto;
-    font-variation-settings:
-      "wdth" 100,
-      "YTLC" 500;
-  }
-}
-
 @layer base {
   body {
     @apply font-body text-ink bg-background;
