@@ -11,6 +11,11 @@ export const handleGitHubCallback = passport.authenticate("github", {
   failureRedirect: `${env.CLIENT_URL}?login=failed`,
 });
 
+export const getCurrentUser = (request: Request, response: Response): void => {
+  const { id, username, profile_image } = request.user!;
+  response.status(200).json({ id, username, profile_image });
+};
+
 export const handleLogout = (
   request: Request,
   response: Response,
