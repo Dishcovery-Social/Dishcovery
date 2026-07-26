@@ -1,0 +1,23 @@
+[
+  {
+    "id": 300,
+    "github_id": 5000,
+    "username": "flavor_maxer",
+    "email": "flavor_maxer@example.com",
+    "profile_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSODccM_rzaFXv1t_S2CHWQZPJvbc9zwx_WznEc9XsaFw&s=10"
+  },
+  {
+    "id": 200,
+    "github_id": 20000,
+    "username": "food_gobbler",
+    "email": "food_gobbler@example.com",
+    "profile_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgn48DSjgodT0TD3-ffVMwqefzYMBKLA5n0qSkCzlKbg&s=10"
+  },
+  {
+    "id": 3200,
+    "github_id": 32000,
+    "username": "steven",
+    "email": "steven@example.com",
+    "profile_image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlm0kk9U0QG-KvRJJi1-GSAqnH3SCWG1rMUMJOEr6HXQ&s=10"
+  }
+]
