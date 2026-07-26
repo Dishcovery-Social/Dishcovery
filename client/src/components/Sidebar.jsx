@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import AccountIcon from "../assets/Account.svg";
 import HomeIcon from "../assets/Home-Icon.svg";
 
@@ -8,13 +8,13 @@ export default function Sidebar() {
       <Link to="/">
         <div className="flex items-center gap-2 max-w-24">
           <img className="h-10" src={HomeIcon} alt="" />
-          <span className="font-heading">Home</span>
+          <h2>Home</h2>
         </div>
       </Link>
       <Link to="/account">
         <div className="flex items-center gap-2 max-w-24">
           <img className="h-10" src={AccountIcon} alt="" />
-          <span className="font-heading">Account</span>
+          <h2 className="">Account</h2>
         </div>
       </Link>
     </div>
