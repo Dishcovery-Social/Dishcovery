@@ -2,7 +2,7 @@ import fs from "fs";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 import type { category } from "../types/category.js";
-import type { recipe } from "../types/recipe.js";
+import type { Recipe } from "../types/recipe.js";
 import type { recipeCategory } from "../types/recipeCategory.js";
 import type { user } from "../types/user.js";
 import { pool } from "./database.js";
@@ -12,7 +12,7 @@ const recipeFile = fs.readFileSync(
   path.join(dirname(currentPath), "../data/recipe_data.json"),
 );
 
-const recipeData: recipe[] = JSON.parse(String(recipeFile)) as recipe[];
+const recipeData: Recipe[] = JSON.parse(String(recipeFile)) as Recipe[];
 
 const categoryFile = fs.readFileSync(
   path.join(dirname(currentPath), "../data/category_data.json"),

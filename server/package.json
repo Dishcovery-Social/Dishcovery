@@ -5,8 +5,11 @@
   "main": "server.ts",
   "scripts": {
     "dev": "tsx --env-file=.env --watch server.ts",
-    "start": "nodemon --require dotenv/config server.ts",
-    "reset": "tsx --env-file=.env config/reset.ts"
+    "start": "node dist/server.js",
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "reset": "tsx --env-file=.env config/reset.ts",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
   "engines": {
     "node": ">=22.18.0"
@@ -17,14 +20,17 @@
   "type": "module",
   "dependencies": {
     "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "pg": "^8.22.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^22.15.21",
     "@types/pg": "^8.20.0",
+    "cross-env": "^10.1.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
     "tsx": "^4.19.4"
   }
 }

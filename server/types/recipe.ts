@@ -1,4 +1,4 @@
-export interface recipe {
+export interface Recipe {
   title: string;
   ingredients: Ingredient[];
   instructions: string;
