@@ -1,10 +1,10 @@
-import fs from "fs";
-import path, { dirname } from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path, { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import type { category } from "../types/category.js";
 import type { Recipe } from "../types/recipe.js";
 import type { recipeCategory } from "../types/recipeCategory.js";
-import type { user } from "../types/user.js";
+import type { User } from "../types/user.js";
 import { pool } from "./database.js";
 
 const currentPath = fileURLToPath(import.meta.url);
@@ -29,7 +29,7 @@ const recipeCategoryData: recipeCategory[] = JSON.parse(
 const userFile = fs.readFileSync(
   path.join(dirname(currentPath), "../data/user_data.json"),
 );
-const userData: user[] = JSON.parse(String(userFile)) as user[];
+const userData: User[] = JSON.parse(String(userFile)) as User[];
 
 const dropAllTables = async () => {
   const dropAllTablesQuery = `
@@ -200,7 +200,7 @@ const createRecipesCategoriesTable = async () => {
         )
     `;
   try {
-    const res = await pool.query(createRecipesCategoriesTableQuery);
+    await pool.query(createRecipesCategoriesTableQuery);
     console.log("recipes_categories table created sucessfully");
   } catch (error) {
     console.error("Error creating recipes_categories table: ", error);
