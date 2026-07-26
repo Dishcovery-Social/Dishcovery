@@ -19,7 +19,8 @@ export const getRecipeById = async (
   }
   const recipe = await RecipesRepository.getRecipeById(id);
   if (!recipe) {
-    throw new Error("Recipe not found");
+    response.status(404).json({ error: "Recipe not found" });
+    return;
   }
   response.status(200).json(recipe);
 };
