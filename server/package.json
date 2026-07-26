@@ -5,7 +5,11 @@
   "main": "server.ts",
   "scripts": {
     "dev": "tsx --env-file=.env --watch server.ts",
-    "start": "node server.ts"
+    "start": "node dist/server.js",
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "reset": "tsx --env-file=.env config/reset.ts",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest"
   },
   "engines": {
     "node": ">=22.18.0"
@@ -15,11 +19,28 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "express": "^5.2.1"
+    "connect-pg-simple": "^10.0.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
+    "pg": "^8.22.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@types/connect-pg-simple": "^7.0.3",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
+    "@types/express-session": "^1.19.0",
     "@types/node": "^22.15.21",
-    "tsx": "^4.19.4"
+    "@types/passport": "^1.0.17",
+    "@types/passport-github2": "^1.2.9",
+    "@types/pg": "^8.20.0",
+    "cross-env": "^10.1.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
+    "tsx": "^4.19.4",
+    "typescript": "^6.0.3"
   }
 }

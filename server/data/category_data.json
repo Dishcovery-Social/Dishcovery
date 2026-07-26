@@ -1,0 +1,78 @@
+[
+  {
+    "id": 1,
+    "name": "sweet"
+  },
+  {
+    "id": 2,
+    "name": "salty"
+  },
+  {
+    "id": 3,
+    "name": "umami"
+  },
+  {
+    "id": 4,
+    "name": "bitter"
+  },
+  {
+    "id": 5,
+    "name": "sour"
+  },
+  {
+    "id": 6,
+    "name": "spicy"
+  },
+  {
+    "id": 7,
+    "name": "high-protein"
+  },
+  {
+    "id": 8,
+    "name": "low-calorie"
+  },
+  {
+    "id": 9,
+    "name": "high-fiber"
+  },
+  {
+    "id": 10,
+    "name": "vegan"
+  },
+  {
+    "id": 11,
+    "name": "vegetarian"
+  },
+  {
+    "id": 12,
+    "name": "Mediterranean"
+  },
+  {
+    "id": 13,
+    "name": "healthy"
+  },
+  {
+    "id": 14,
+    "name": "comfort"
+  },
+  {
+    "id": 15,
+    "name": "breakfast"
+  },
+  {
+    "id": 16,
+    "name": "lunch"
+  },
+  {
+    "id": 17,
+    "name": "dinner"
+  },
+  {
+    "id": 18,
+    "name": "kid-friendly"
+  },
+  {
+    "id": 19,
+    "name": "gluten-free"
+  }
+]
