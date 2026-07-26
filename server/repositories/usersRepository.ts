@@ -1,5 +1,6 @@
 import { pool } from "../config/database.js";
 import type { User } from "../types/user.js";
+import { camelizeKeys } from "./shared.js";
 
 type UserInsert = Omit<User, "id" | "created_at">;
 
@@ -7,7 +8,7 @@ export const getUserById = async (id: number): Promise<User | undefined> => {
   const results = await pool.query<User>("SELECT * FROM users WHERE id = $1", [
     id,
   ]);
-  return results.rows[0];
+  return camelizeKeys<User | undefined>(results.rows[0]);
 };
 
 export const upsertUser = async (user: UserInsert): Promise<User> => {
@@ -21,5 +22,5 @@ export const upsertUser = async (user: UserInsert): Promise<User> => {
      RETURNING *`,
     [user.github_id, user.username, user.email, user.profile_image],
   );
-  return results.rows[0];
+  return camelizeKeys<User>(results.rows[0]);
 };
