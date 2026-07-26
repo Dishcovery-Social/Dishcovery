@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import CommentIcon from "../assets/Comment-Icon.svg";
 
 export default function RecipeCard({
