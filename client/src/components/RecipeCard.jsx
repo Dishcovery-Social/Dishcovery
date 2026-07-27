@@ -32,7 +32,7 @@ export default function RecipeCard({
           </p>
           <div className="flex items-center mt-4">
             <Link
-              to={`/recipes/${recipeId}`}
+              to={`/recipes/${username}`}
               aria-label={`View recipe: ${title}`}
               className="font-bold"
             >
