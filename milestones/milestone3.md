@@ -25,10 +25,10 @@ You will need to reference the GitHub Project Management guide in the course por
     3. Milestone 3 - Unit 7
     4. Milestone 4 - Unit 8
     5. Milestone 5 - Unit 9
-  - [ ] Set the completion percentage of each milestone. The GitHub Milestone for this unit (Milestone 3 - Unit 7) should be 100% completed when you submit for full points.
-- [ ] In `readme.md`, check off the features you have completed in this unit by adding a ✅ emoji in front of the feature's name.
-  - [ ] Under each feature you have completed, include a GIF showing feature functionality.
-- [ ] In this documents, complete all five questions in the **Reflection** section below.
+  - [x] Set the completion percentage of each milestone. The GitHub Milestone for this unit (Milestone 3 - Unit 7) should be 100% completed when you submit for full points.
+- [x] In `readme.md`, check off the features you have completed in this unit by adding a ✅ emoji in front of the feature's name.
+  - [x] Under each feature you have completed, include a GIF showing feature functionality.
+- [x] In this documents, complete all five questions in the **Reflection** section below.
 
 ## Reflection
 
@@ -42,7 +42,7 @@ The biggest challenge was breaking down tasks into small, single-purpose issues 
 
 ### 3. Did you finish all of your tasks in your sprint plan for this week? If you did not finish all of the planned tasks, how would you prioritize the remaining tasks on your list?
 
-We did not complete all planned tasks this sprint. Coordination was difficult due to scheduling conflicts and reviews take longer than expected. We will carry the remaining tasks to the next week and prioritize them at the start of the sprint.  
+ We completed most of our planned tasks for this sprint. The only remaining item is the GET `/recipes/:id` endpoint, which is code complete and pending review before merge. 
 
 ### 4. Which features and user stories would you consider “at risk”? How will you change your plan if those items remain “at risk”?
 

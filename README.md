@@ -30,7 +30,7 @@ Backend: TypeScript, Express, Render Database
 
 ### Required
 ***
-### Recipe Feed
+### Recipe Feed ✅
 
 The home page displays a feed of all community shared recipes pulling from the database. It serves as the primary read function where users can browse existing posts.
 
