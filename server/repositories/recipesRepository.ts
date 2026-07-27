@@ -1,31 +1,46 @@
 import { pool } from "../config/database.js";
-import type { Recipe } from "../types/recipe.js";
+import type { RecipeWithProfile } from "../types/recipe.js";
 
-export const getAllRecipes = async (): Promise<Recipe[]> => {
-  const results = await pool.query(
+export const getAllRecipes = async (): Promise<RecipeWithProfile[]> => {
+  const results = await pool.query<RecipeWithProfile>(
     `SELECT
-      recipes.*,
+      recipes.title,
+      recipes.ingredients,
+      recipes.instructions,
+      recipes.image,
+      recipes.created_at,
+      users.username,
+      users.profile_image,
       COALESCE(array_agg(categories.name) FILTER (WHERE categories.name IS NOT NULL), '{}') AS category
     FROM recipes
     LEFT JOIN recipes_categories ON recipes.id = recipes_categories.recipe_id
     LEFT JOIN categories ON recipes_categories.category_id = categories.id
-    GROUP BY recipes.id
-    ORDER BY recipes.id ASC`,
+    LEFT JOIN users ON recipes.user_id = users.id
+    GROUP BY recipes.id, users.username, users.profile_image
+    ORDER BY recipes.created_at DESC`,
   );
-  return results.rows;
+  return results.rows[0] ? results.rows : [];
 };
 
-export const getRecipeById = async (id: number): Promise<Recipe | null> => {
+export const getRecipeById = async (
+  id: number,
+): Promise<RecipeWithProfile | null> => {
   const result = await pool.query(
     `SELECT
-      recipes.*,
+      recipes.title,
+      recipes.ingredients,
+      recipes.instructions,
+      recipes.image,
+      recipes.created_at,
+      users.username,
+      users.profile_image,
       COALESCE(array_agg(categories.name) FILTER (WHERE categories.name IS NOT NULL), '{}') AS category
     FROM recipes
     LEFT JOIN recipes_categories ON recipes.id = recipes_categories.recipe_id
     LEFT JOIN categories ON recipes_categories.category_id = categories.id
+    LEFT JOIN users ON recipes.user_id = users.id
     WHERE recipes.id = $1
-    GROUP BY recipes.id
-    `,
+    GROUP BY recipes.id, users.username, users.profile_image`,
     [id],
   );
   return result.rows[0] ?? null;
