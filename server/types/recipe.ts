@@ -7,6 +7,12 @@ export interface Recipe {
   category: string[];
   created_at: string;
 }
+
+export type RecipeWithProfile = Omit<Recipe, "user_id"> & {
+  username: string;
+  profile_image: string | null;
+};
+
 interface Ingredient {
   name: string;
   quantity: number;
