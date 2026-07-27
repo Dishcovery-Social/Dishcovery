@@ -4,6 +4,7 @@ import type { RecipeWithProfile } from "../types/recipe.js";
 export const getAllRecipes = async (): Promise<RecipeWithProfile[]> => {
   const results = await pool.query<RecipeWithProfile>(
     `SELECT
+      recipes.id,
       recipes.title,
       recipes.ingredients,
       recipes.instructions,
