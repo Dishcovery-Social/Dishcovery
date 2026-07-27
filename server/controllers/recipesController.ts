@@ -17,6 +17,7 @@ export const getRecipeById = async (
   if (Number.isNaN(id)) {
     console.log(`Invalid recipe ID: ${request.params.id}`);
     response.status(400).json({ error: "Invalid recipe ID" });
+    return;
   }
   const recipe = await RecipesRepository.getRecipeById(id);
   if (!recipe) {
