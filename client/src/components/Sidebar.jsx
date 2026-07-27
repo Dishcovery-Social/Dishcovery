@@ -8,13 +8,13 @@ export default function Sidebar() {
       <Link to="/">
         <div className="flex items-center gap-2 max-w-24">
           <img className="h-10" src={HomeIcon} alt="" />
-          <h2>Home</h2>
+          <span className="font-heading">Home</span>
         </div>
       </Link>
       <Link to="/account">
         <div className="flex items-center gap-2 max-w-24">
           <img className="h-10" src={AccountIcon} alt="" />
-          <h2 className="">Account</h2>
+          <span className="font-heading">Account</span>
         </div>
       </Link>
     </div>

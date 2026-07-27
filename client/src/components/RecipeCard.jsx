@@ -10,7 +10,7 @@ export default function RecipeCard({
   recipeImageUrl,
 }) {
   return (
-    <div className="w-full max-w-md bg-secondary rounded-3xl m-auto mt-12">
+    <div className="w-full max-w-md bg-secondary rounded-3xl">
       <div className="flex items-center gap-4 pt-6 pr-6 pb-4 pl-10">
         <img
           src={avatarUrl}
@@ -27,12 +27,10 @@ export default function RecipeCard({
         />
         <div className="flex flex-col gap-2 px-6">
           <p className="ml-4 text-2xl font-bold">{title}</p>
-          <p className="line-clamp-5 leading-tight text-ellipsis overflow-hidden">
-            {instructions}
-          </p>
+          <p className="line-clamp-5 leading-tight">{instructions}</p>
           <div className="flex items-center mt-4">
             <Link
-              to={`/recipes/${username}`}
+              to={`/recipes/${recipeId}`}
               aria-label={`View recipe: ${title}`}
               className="font-bold"
             >
