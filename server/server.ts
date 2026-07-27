@@ -4,6 +4,7 @@ import express, { type Request, type Response } from "express";
 import passport from "passport";
 import { env } from "./config/env.js";
 import { sessionMiddleware } from "./config/session.js";
+import categoriesRouter from "./routes/categories.js";
 import recipesRouter from "./routes/recipes.js";
 
 const app = express();
@@ -19,6 +20,7 @@ app.get("/", (_req: Request, res: Response) => {
 });
 
 app.use("/recipes", recipesRouter);
+app.use("/categories", categoriesRouter);
 
 app.listen(env.PORT, () => {
   console.log(`Server listening on port ${env.PORT}`);
