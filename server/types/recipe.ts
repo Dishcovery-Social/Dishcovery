@@ -19,3 +19,5 @@ interface Ingredient {
   quantity: number;
   unit: string;
 }
+
+export type NewRecipe = Omit<Recipe, "id" | "category" | "created_at">;

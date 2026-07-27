@@ -6,4 +6,7 @@ const router: Router = Router();
 // GET /recipes
 router.get("/", RecipesController.getAllRecipes);
 
+// POST /recipes
+router.post("/", RecipesController.createRecipe);
+
 export default router;
