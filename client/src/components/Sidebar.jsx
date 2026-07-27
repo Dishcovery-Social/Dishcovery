@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import AccountIcon from "../assets/Account.svg";
 import HomeIcon from "../assets/Home-Icon.svg";
 

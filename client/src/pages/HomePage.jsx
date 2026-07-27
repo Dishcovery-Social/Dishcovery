@@ -39,8 +39,8 @@ export default function HomePage() {
         {recipe.map((item) => (
           <RecipeCard
             key={item.id}
-            avatarUrl="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.bLff8i4pTzjwkAUp-AcbBQHaJ4%3Fpid%3DApi&f=1&ipt=ec0332c6d9dfde5b911526dc9c3488ee9ca624e430adb7a054019ee4bc1e92a1&ipo=images"
-            username="ShadowPrincess"
+            avatarUrl={item.profile_image}
+            username={item.username}
             recipeId={item.id}
             title={item.title}
             instructions={item.instructions}
