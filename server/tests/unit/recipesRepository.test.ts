@@ -17,7 +17,7 @@ const getAllRecipesQuery = `SELECT
     LEFT JOIN categories ON recipes_categories.category_id = categories.id
     LEFT JOIN users ON recipes.user_id = users.id
     GROUP BY recipes.id, users.username, users.profile_image
-    ORDER BY recipes.id ASC`;
+    ORDER BY recipes.created_at DESC`;
 
 jest.unstable_mockModule("../../config/database.js", () => ({
   pool: {
