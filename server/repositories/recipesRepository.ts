@@ -20,14 +20,15 @@ export const getAllRecipes = async (): Promise<RecipeWithProfile[]> => {
     GROUP BY recipes.id, users.username, users.profile_image
     ORDER BY recipes.created_at DESC`,
   );
-  return results.rows[0] ? results.rows : [];
+  return results.rows;
 };
 
 export const getRecipeById = async (
   id: number,
-): Promise<RecipeWithProfile | null> => {
-  const result = await pool.query(
+): Promise<RecipeWithProfile | undefined> => {
+  const result = await pool.query<RecipeWithProfile>(
     `SELECT
+      recipes.id,
       recipes.title,
       recipes.ingredients,
       recipes.instructions,
@@ -44,5 +45,5 @@ export const getRecipeById = async (
     GROUP BY recipes.id, users.username, users.profile_image`,
     [id],
   );
-  return result.rows[0] ?? null;
+  return result.rows[0];
 };

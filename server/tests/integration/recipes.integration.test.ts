@@ -15,6 +15,7 @@ const { buildTestApp } = await import("../testServer.js");
 const app = buildTestApp("/recipes", recipesRouter);
 
 const mockRecipe: RecipeWithProfile = {
+  id: 1,
   title: "Pancakes",
   ingredients: [
     { name: "Flour", quantity: 2, unit: "cups" },

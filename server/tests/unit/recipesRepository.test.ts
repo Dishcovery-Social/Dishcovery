@@ -92,6 +92,7 @@ describe("getAllRecipes", () => {
 });
 
 const getRecipeByIdQuery = `SELECT
+      recipes.id,
       recipes.title,
       recipes.ingredients,
       recipes.instructions,
@@ -118,6 +119,7 @@ describe("getRecipeById", () => {
 
   it("returns a recipe by ID from the database", async () => {
     const mockRecipe: RecipeWithProfile = {
+      id: 1,
       title: "Pancakes",
       ingredients: [
         { name: "Flour", quantity: 2, unit: "cups" },
@@ -139,13 +141,13 @@ describe("getRecipeById", () => {
     expect(result).toEqual(mockRecipe);
   });
 
-  it("returns null when the recipe does not exist", async () => {
+  it("returns undefined when the recipe does not exist", async () => {
     mockQuery.mockResolvedValue({ rows: [] });
 
     const result = await getRecipeById(999);
 
     expect(mockQuery).toHaveBeenCalledWith(getRecipeByIdQuery, [999]);
-    expect(result).toBeNull();
+    expect(result).toBeUndefined();
   });
 
   it("propagates an error if the query fails", async () => {
