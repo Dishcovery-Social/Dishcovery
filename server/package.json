@@ -9,7 +9,9 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "reset": "tsx --env-file=.env config/reset.ts",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest"
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest tests/unit",
+    "test:integration": "cross-env NODE_OPTIONS=--experimental-vm-modules npx jest tests/integration"
   },
   "engines": {
     "node": ">=22.18.0"
