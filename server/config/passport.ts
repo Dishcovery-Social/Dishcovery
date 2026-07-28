@@ -20,7 +20,8 @@ const verify = async (
 
     return done(null, user);
   } catch (error) {
-    return done(error);
+    console.error("Failed to upsert user during GitHub OAuth:", error);
+    return done(null, false);
   }
 };
 
