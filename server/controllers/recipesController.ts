@@ -45,7 +45,7 @@ export const deleteRecipe = async (
       return;
     }
   } catch (error) {
-    console.error(`Error deleting recipe: ${error}`);
+    console.log(`Error deleting recipe: ${id}`);
     response.status(500).json({ error: `Failed to delete recipe: ${id}` });
     return;
   }
