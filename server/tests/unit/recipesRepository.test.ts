@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
+import type { Request, Response } from "express";
 import type { RecipeWithProfile } from "../../types/recipe.js";
 
 const mockQuery = jest.fn<(...args: unknown[]) => Promise<unknown>>();
@@ -154,5 +155,122 @@ describe("getRecipeById", () => {
     mockQuery.mockRejectedValue(new Error("DB connection failed"));
 
     await expect(getRecipeById(1)).rejects.toThrow("DB connection failed");
+  });
+});
+
+const deleteRecipeByIdQuery = "DELETE FROM recipes WHERE id = $1";
+
+const { deleteRecipeById } = await import(
+  "../../repositories/recipesRepository.js"
+);
+
+describe("deleteRecipeById", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("returns true when a recipe is deleted", async () => {
+    mockQuery.mockResolvedValue({ rowCount: 1 });
+
+    const result = await deleteRecipeById(1);
+
+    expect(mockQuery).toHaveBeenCalledWith(deleteRecipeByIdQuery, [1]);
+    expect(result).toBe(true);
+  });
+
+  it("returns false when no recipe matches the ID", async () => {
+    mockQuery.mockResolvedValue({ rowCount: 0 });
+
+    const result = await deleteRecipeById(999);
+
+    expect(mockQuery).toHaveBeenCalledWith(deleteRecipeByIdQuery, [999]);
+    expect(result).toBe(false);
+  });
+
+  it("returns false when rowCount is null", async () => {
+    mockQuery.mockResolvedValue({ rowCount: null });
+
+    const result = await deleteRecipeById(1);
+
+    expect(result).toBe(false);
+  });
+
+  it("propagates an error if the query fails", async () => {
+    mockQuery.mockRejectedValue(new Error("DB connection failed"));
+
+    await expect(deleteRecipeById(1)).rejects.toThrow("DB connection failed");
+  });
+});
+
+const mockDeleteRecipeById =
+  jest.fn<(...args: unknown[]) => Promise<unknown>>();
+
+jest.unstable_mockModule("../../repositories/recipesRepository.js", () => ({
+  deleteRecipeById: mockDeleteRecipeById,
+}));
+
+const { deleteRecipe } = await import("../../controllers/recipesController.js");
+
+const mockResponse = (): Response => {
+  const res = {} as Response;
+  res.status = jest.fn().mockReturnValue(res) as unknown as Response["status"];
+  res.json = jest.fn().mockReturnValue(res) as unknown as Response["json"];
+  return res;
+};
+
+describe("deleteRecipe", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("returns 200 and a success message when the recipe is deleted", async () => {
+    mockDeleteRecipeById.mockResolvedValue(true);
+    const req = { params: { id: "1" } } as unknown as Request;
+    const res = mockResponse();
+
+    await deleteRecipe(req, res);
+
+    expect(mockDeleteRecipeById).toHaveBeenCalledWith(1);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Recipe deleted successfully: 1",
+    });
+  });
+
+  it("returns 400 when the ID is invalid", async () => {
+    const req = { params: { id: "abc" } } as unknown as Request;
+    const res = mockResponse();
+
+    await deleteRecipe(req, res);
+
+    expect(mockDeleteRecipeById).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledWith({ error: "Invalid recipe ID" });
+  });
+
+  it("returns 404 when the recipe does not exist", async () => {
+    mockDeleteRecipeById.mockResolvedValue(false);
+    const req = { params: { id: "999" } } as unknown as Request;
+    const res = mockResponse();
+
+    await deleteRecipe(req, res);
+
+    expect(mockDeleteRecipeById).toHaveBeenCalledWith(999);
+    expect(res.status).toHaveBeenCalledWith(404);
+    expect(res.json).toHaveBeenCalledWith({ error: "Recipe not found: 999" });
+  });
+
+  it("returns 500 when the repository throws an error", async () => {
+    mockDeleteRecipeById.mockRejectedValue(new Error("DB connection failed"));
+    const req = { params: { id: "1" } } as unknown as Request;
+    const res = mockResponse();
+
+    await deleteRecipe(req, res);
+
+    expect(mockDeleteRecipeById).toHaveBeenCalledWith(1);
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({
+      error: "Failed to delete recipe: 1",
+    });
   });
 });
