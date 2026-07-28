@@ -9,18 +9,19 @@ const verify = async (
   profile: Profile,
   done: (error: unknown, user?: Express.User | false) => void,
 ) => {
-  const { id, username, profileUrl, emails } = profile;
+  const { id, username, photos, emails } = profile;
   try {
     const user = await UsersRepository.upsertUser({
       github_id: id,
       username: username ?? `user_${id}`,
       email: emails?.[0]?.value ?? null,
-      profile_image: profileUrl,
+      profile_image: photos?.[0]?.value ?? null,
     });
 
     return done(null, user);
   } catch (error) {
-    return done(error);
+    console.error("Failed to upsert user during GitHub OAuth:", error);
+    return done(null, false);
   }
 };
 
