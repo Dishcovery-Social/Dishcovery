@@ -9,8 +9,22 @@ import recipesRouter from "./routes/recipes.js";
 
 const app = express();
 
+if (env.NODE_ENV === "production") {
+  // Render reverse proxies the backend server and auth
+  // will fail in prod since secure is set to true and
+  // Render terminates the TLS before proxying to the server.
+  // Setting this tells Express to trust the proxy that forwarded
+  // the request to it for up to 1 hop.
+  app.set("trust proxy", 1);
+}
+
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: env.CLIENT_URL,
+    credentials: true,
+  }),
+);
 app.use(sessionMiddleware);
 app.use(passport.initialize());
 app.use(passport.session());
