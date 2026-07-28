@@ -1,3 +1,4 @@
+import type { NextFunction, Request, Response } from "express";
 import passport from "passport";
 import { env } from "../config/env.js";
 
@@ -9,3 +10,18 @@ export const handleGitHubCallback = passport.authenticate("github", {
   successRedirect: `${env.CLIENT_URL}?login=success`,
   failureRedirect: `${env.CLIENT_URL}?login=failed`,
 });
+
+export const handleLogout = (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): void => {
+  request.logout((logoutError) => {
+    if (logoutError) return next(logoutError);
+    request.session.destroy((sessionError) => {
+      if (sessionError) return next(sessionError);
+      response.clearCookie("connect.sid");
+      response.sendStatus(200);
+    });
+  });
+};
