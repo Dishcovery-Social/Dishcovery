@@ -1,16 +1,24 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
-import type { Recipe } from "../../types/recipe.js";
+import type { RecipeWithProfile } from "../../types/recipe.js";
 
 const mockQuery = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 
 const getAllRecipesQuery = `SELECT
-      recipes.*,
+      recipes.id,
+      recipes.title,
+      recipes.ingredients,
+      recipes.instructions,
+      recipes.image,
+      recipes.created_at,
+      users.username,
+      users.profile_image,
       COALESCE(array_agg(categories.name) FILTER (WHERE categories.name IS NOT NULL), '{}') AS category
     FROM recipes
     LEFT JOIN recipes_categories ON recipes.id = recipes_categories.recipe_id
     LEFT JOIN categories ON recipes_categories.category_id = categories.id
-    GROUP BY recipes.id
-    ORDER BY recipes.id ASC`;
+    LEFT JOIN users ON recipes.user_id = users.id
+    GROUP BY recipes.id, users.username, users.profile_image
+    ORDER BY recipes.created_at DESC`;
 
 jest.unstable_mockModule("../../config/database.js", () => ({
   pool: {
@@ -28,7 +36,7 @@ describe("getAllRecipes", () => {
   });
 
   it("returns all recipes from the database", async () => {
-    const mockRows: Recipe[] = [
+    const mockRows: RecipeWithProfile[] = [
       {
         id: 1,
         title: "Pancakes",
@@ -38,7 +46,10 @@ describe("getAllRecipes", () => {
         ],
         instructions: "Mix and cook on a griddle.",
         image: "pancakes.jpg",
-        user_id: 1,
+        username: "chefuser",
+        profile_image: "chefuser.jpg",
+        category: [],
+        created_at: "2024-01-01T00:00:00.000Z",
       },
       {
         id: 2,
@@ -49,7 +60,10 @@ describe("getAllRecipes", () => {
         ],
         instructions: "Mix and cook in a waffle iron.",
         image: "waffles.jpg",
-        user_id: 1,
+        username: "chefuser",
+        profile_image: "chefuser.jpg",
+        category: [],
+        created_at: "2024-01-02T00:00:00.000Z",
       },
     ];
 
