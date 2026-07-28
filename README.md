@@ -30,11 +30,11 @@ Backend: TypeScript, Express, Render Database
 
 ### Required
 ***
-### Recipe Feed
+### Recipe Feed ✅
 
 The home page displays a feed of all community shared recipes pulling from the database. It serves as the primary read function where users can browse existing posts.
 
-[gif goes here]
+<img src="./demo/recipe-feed.gif" title="PersonalDesk demo" width="600" alt="Video Walkthrough of PersonalDesk" />
 
 ### Detailed Recipe View
 

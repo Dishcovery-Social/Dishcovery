@@ -4,6 +4,7 @@ import type { RecipeWithProfile } from "../../types/recipe.js";
 const mockQuery = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 
 const getAllRecipesQuery = `SELECT
+      recipes.id,
       recipes.title,
       recipes.ingredients,
       recipes.instructions,
@@ -37,6 +38,7 @@ describe("getAllRecipes", () => {
   it("returns all recipes from the database", async () => {
     const mockRows: RecipeWithProfile[] = [
       {
+        id: 1,
         title: "Pancakes",
         ingredients: [
           { name: "Flour", quantity: 2, unit: "cups" },
@@ -50,6 +52,7 @@ describe("getAllRecipes", () => {
         created_at: "2024-01-01T00:00:00.000Z",
       },
       {
+        id: 2,
         title: "Waffles",
         ingredients: [
           { name: "Flour", quantity: 2, unit: "cups" },
