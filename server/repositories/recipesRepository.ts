@@ -47,3 +47,8 @@ export const getRecipeById = async (
   );
   return result.rows[0];
 };
+
+export const deleteRecipeById = async (id: number): Promise<boolean> => {
+  const deleted = await pool.query("DELETE FROM recipes WHERE id = $1", [id]);
+  return (deleted.rowCount ?? 0) > 0;
+};

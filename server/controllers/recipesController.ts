@@ -27,3 +27,27 @@ export const getRecipeById = async (
   }
   response.status(200).json(recipe);
 };
+
+export const deleteRecipe = async (
+  request: Request,
+  response: Response,
+): Promise<void> => {
+  const id = parseInt(request.params.id as string, 10);
+  if (Number.isNaN(id)) {
+    console.log(`Invalid recipe ID: ${request.params.id}`);
+    response.status(400).json({ error: "Invalid recipe ID" });
+    return;
+  }
+  try {
+    const wasDeleted = await RecipesRepository.deleteRecipeById(id);
+    if (!wasDeleted) {
+      response.status(404).json({ error: `Recipe not found: ${id}` });
+      return;
+    }
+  } catch (error) {
+    console.log(`Error deleting recipe: ${error}`);
+    response.status(500).json({ error: `Error deleting recipe: ${error}` });
+    return;
+  }
+  response.status(200).json({ message: `Recipe deleted successfully: ${id}` });
+};
