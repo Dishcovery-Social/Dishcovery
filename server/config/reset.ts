@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { category } from "../types/category.js";
+import type { Category } from "../types/category.js";
 import type { Recipe } from "../types/recipe.js";
 import type { recipeCategory } from "../types/recipeCategory.js";
 import type { User } from "../types/user.js";
@@ -17,7 +17,7 @@ const recipeData: Recipe[] = JSON.parse(String(recipeFile)) as Recipe[];
 const categoryFile = fs.readFileSync(
   path.join(dirname(currentPath), "../data/category_data.json"),
 );
-const categoryData: category[] = JSON.parse(String(categoryFile)) as category[];
+const categoryData: Category[] = JSON.parse(String(categoryFile)) as Category[];
 
 const recipeCategoryFile = fs.readFileSync(
   path.join(dirname(currentPath), "../data/recipe_category_data.json"),
