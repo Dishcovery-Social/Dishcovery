@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { findOrCreateCategoryIDs } from "../repositories/categoriesRepository.js";
 import * as RecipesRepository from "../repositories/recipesRepository.js";
-import type { RecipeWithProfile } from "../types/recipe.js";
+import type { Ingredient, NewRecipe } from "../types/recipe.js";
 
 export const getAllRecipes = async (
   _request: Request,
@@ -63,14 +63,14 @@ export const createRecipe = async (
     return;
   }
 
-  const isValidIngredient = (ingredient: any): boolean => {
+  const isValidIngredient = (ingredient: Ingredient): boolean => {
     return (
       typeof ingredient === "object" &&
       ingredient !== null &&
       typeof ingredient.name === "string" &&
       ingredient.name.trim() !== "" &&
       typeof ingredient.quantity === "number" &&
-      !isNaN(ingredient.quantity) &&
+      !Number.isNaN(ingredient.quantity) &&
       typeof ingredient.unit === "string" &&
       ingredient.unit.trim() !== ""
     );
@@ -131,9 +131,9 @@ export const createRecipe = async (
     return;
   }
 
-  const recipe = {
+  const recipe: NewRecipe = {
     title: recipeData.title.trim(),
-    ingredients: recipeData.ingredients.map((ingredient: any) => ({
+    ingredients: recipeData.ingredients.map((ingredient: Ingredient) => ({
       name: ingredient.name.trim(),
       quantity: ingredient.quantity,
       unit: ingredient.unit.trim(),

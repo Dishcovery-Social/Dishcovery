@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
+import type { NextFunction, Request, Response } from "express";
 import request from "supertest";
 import type { RecipeWithProfile } from "../../types/recipe.js";
 
@@ -10,7 +11,9 @@ jest.unstable_mockModule("../../config/database.js", () => ({
   },
 }));
 
-const mockAuthenticate = jest.fn((req: any, res: any, next: any) => next());
+const mockAuthenticate = jest.fn(
+  (_req: Request, _res: Response, next: NextFunction) => next(),
+);
 
 jest.unstable_mockModule("../../middleware/authenticate.js", () => ({
   authenticate: mockAuthenticate,
@@ -117,8 +120,8 @@ describe("GET /recipes/:id", () => {
 describe("POST /recipes", () => {
   afterEach(() => {
     jest.clearAllMocks();
-    mockAuthenticate.mockImplementation((req: any, res: any, next: any) =>
-      next(),
+    mockAuthenticate.mockImplementation(
+      (_req: Request, _res: Response, next: NextFunction) => next(),
     );
   });
 
@@ -132,7 +135,7 @@ describe("POST /recipes", () => {
   };
 
   it("returns 401 when the user is not authenticated", async () => {
-    mockAuthenticate.mockImplementation((req: any, res: any) =>
+    mockAuthenticate.mockImplementation((_req: Request, res: Response) =>
       res.status(401).json({ error: "Unauthorized" }),
     );
 

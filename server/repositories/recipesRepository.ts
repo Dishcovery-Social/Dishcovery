@@ -75,5 +75,10 @@ export const createRecipe = async (
     );
   }
 
-  return (await getRecipeById(recipeId))!;
+  const recipe = await getRecipeById(recipeId);
+  if (!recipe) {
+    throw new Error("Failed to retrieve the newly created recipe.");
+  }
+
+  return recipe;
 };
