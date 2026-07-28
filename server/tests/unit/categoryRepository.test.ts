@@ -15,11 +15,11 @@ const { getAllCategories } = await import(
   "../../repositories/categoriesRepository.js"
 );
 
-describe("getAllCategories", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
+describe("getAllCategories", () => {
   it("returns all categories from the database", async () => {
     const mockRows: Category[] = [
       { id: 1, name: "Breakfast" },

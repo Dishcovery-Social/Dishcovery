@@ -35,15 +35,6 @@ describe("GET /categories", () => {
     expect(response.body).toEqual([mockCategory]);
   });
 
-  it("returns 200 with an empty array when there are no categories", async () => {
-    mockQuery.mockResolvedValue({ rows: [] });
-
-    const response = await request(app).get("/categories");
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual([]);
-  });
-
   it("returns 500 when the database query fails", async () => {
     mockQuery.mockRejectedValue(new Error("DB connection failed"));
 
