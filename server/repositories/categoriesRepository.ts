@@ -31,5 +31,3 @@ export const findOrCreateCategoryIDs = async (
 
   return categories;
 };
-
-
