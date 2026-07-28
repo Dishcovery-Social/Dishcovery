@@ -5,6 +5,7 @@ const router: Router = Router();
 
 // GET /recipes
 router.get("/", RecipesController.getAllRecipes);
+router.get("/:id", RecipesController.getRecipeById);
 
 // POST /recipes
 router.post("/", RecipesController.createRecipe);

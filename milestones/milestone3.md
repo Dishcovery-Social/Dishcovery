@@ -42,7 +42,7 @@ The biggest challenge was breaking down tasks into small, single-purpose issues 
 
 ### 3. Did you finish all of your tasks in your sprint plan for this week? If you did not finish all of the planned tasks, how would you prioritize the remaining tasks on your list?
 
- We completed most of our planned tasks for this sprint. The only remaining item is the GET `/recipes/:id` endpoint, which is code complete and pending review before merge. 
+All tasks have now been completed for Q3. We will now be prioritizing user authentication so that the rest of the routes, etc. can be built with authentication in mind.
 
 ### 4. Which features and user stories would you consider “at risk”? How will you change your plan if those items remain “at risk”?
 

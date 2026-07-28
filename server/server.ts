@@ -4,6 +4,7 @@ import express, { type Request, type Response } from "express";
 import passport from "passport";
 import { env } from "./config/env.js";
 import { sessionMiddleware } from "./config/session.js";
+import authRouter from "./routes/auth.js";
 import recipesRouter from "./routes/recipes.js";
 
 const app = express();
@@ -18,6 +19,7 @@ app.get("/", (_req: Request, res: Response) => {
   res.send("Server is running.");
 });
 
+app.use("/auth", authRouter);
 app.use("/recipes", recipesRouter);
 
 app.listen(env.PORT, () => {
