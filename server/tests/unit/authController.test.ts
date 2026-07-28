@@ -1,10 +1,13 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import type { NextFunction, Request, Response } from "express";
+import { mockUser } from "../fixtures/users.js";
 
 const mockLogout = jest.fn<(callback: (err: unknown) => void) => void>();
 const mockDestroy = jest.fn<(callback: (err: unknown) => void) => void>();
 const mockClearCookie = jest.fn();
 const mockSendStatus = jest.fn();
+const mockStatus = jest.fn();
+const mockJson = jest.fn();
 const mockNext = jest.fn() as unknown as NextFunction;
 
 // Satisfy the named "env" export that authController imports
@@ -12,7 +15,9 @@ jest.unstable_mockModule("../../config/env.js", () => ({
   env: {},
 }));
 
-const { handleLogout } = await import("../../controllers/authController.js");
+const { getCurrentUser, handleLogout } = await import(
+  "../../controllers/authController.js"
+);
 
 const mockReq = {
   logout: mockLogout,
@@ -22,10 +27,29 @@ const mockReq = {
 const mockRes = {
   clearCookie: mockClearCookie,
   sendStatus: mockSendStatus,
+  status: mockStatus.mockReturnValue({ json: mockJson }),
 } as unknown as Response;
 
 afterEach(() => {
   jest.clearAllMocks();
+});
+
+describe("getCurrentUser", () => {
+  it("returns the current user with status 200", () => {
+    const mockReqWithUser = {
+      ...mockReq,
+      user: mockUser,
+    } as unknown as Request;
+
+    getCurrentUser(mockReqWithUser, mockRes);
+
+    expect(mockStatus).toHaveBeenCalledWith(200);
+    expect(mockJson).toHaveBeenCalledWith({
+      id: mockUser.id,
+      username: mockUser.username,
+      profile_image: mockUser.profile_image,
+    });
+  });
 });
 
 describe("handleLogout", () => {

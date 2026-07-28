@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
-import type { User } from "../../types/user.js";
+import { mockUser } from "../fixtures/users.js";
 
 const mockQuery = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 
@@ -13,16 +13,7 @@ const { getUserById, upsertUser } = await import(
   "../../repositories/usersRepository.js"
 );
 
-const mockUserId = 1;
-
-const mockUser: User = {
-  id: mockUserId,
-  github_id: "12345",
-  username: "foodie",
-  email: "foodie@example.com",
-  profile_image: "https://avatars.githubusercontent.com/u/12345",
-  created_at: new Date("2026-01-01"),
-};
+const mockUserId = mockUser.id;
 
 afterEach(() => {
   jest.clearAllMocks();
