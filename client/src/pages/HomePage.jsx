@@ -50,7 +50,13 @@ export default function HomePage() {
           ))
         )}
       </div>
-      <button type="button" className="fixed right-8 bottom-8 h-20 z-10">
+      <button
+        type="button"
+        className="fixed right-8 bottom-8 h-20 z-10"
+        onClick={() => {
+          window.location.href = "/create";
+        }}
+      >
         <img src={CreateIcon} alt="Create post" className="h-full" />
       </button>
     </div>
