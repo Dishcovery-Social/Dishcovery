@@ -5,5 +5,6 @@ const router: Router = Router();
 
 // GET /recipes
 router.get("/", RecipesController.getAllRecipes);
+router.get("/:id", RecipesController.getRecipeById);
 
 export default router;
