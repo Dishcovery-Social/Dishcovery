@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 
@@ -9,6 +10,37 @@ function LabelStyle({ description, text }) {
   );
 }
 
+function FormButton({ bgColor, buttonType, text }) {
+  return (
+    <button
+      className={`${bgColor} flex items-center justify-center rounded-full w-24 p-1 mb-8`}
+      type={buttonType}
+    >
+      {text}
+    </button>
+  );
+}
+
+function FormInput({ placeholderText }) {
+  const [value, setValue] = useState("");
+  const textareaRef = useRef(null);
+
+  const _handleChange = (e) => {
+    setValue(e.target.value);
+    const el = e.target;
+    el.style.height = "auto";
+    el.style.height = `${Math.max(el.scrollHeight, 96)}px`;
+  };
+  return (
+    <textarea
+      ref={textareaRef}
+      value={value}
+      onChange={(e) => setValue(e.target.value)}
+      placeholder={placeholderText}
+      className="text-center bg-primary placeholder-ink w-3/4 min-h-8 p-1 resize-none overflow-hidden"
+    />
+  );
+}
 export default function EditPage() {
   return (
     <div>
@@ -26,16 +58,29 @@ export default function EditPage() {
             <span>ShadowPrincess</span>
           </div>
           <form action="" className="flex flex-col items-center font-bold">
-            <LabelStyle description="recipe title" text="Enter Recipe Name" />
-            <input
-              type="text"
-              placeholder="Enter Recipe Name"
-              className="text-center bg-primary placeholder-ink w-2/4 p-1"
+            <LabelStyle description="recipe title" text="Recipe Title:" />
+            <FormInput placeholderText="Enter Recipe Name" />
+            <LabelStyle description="file upload" text="Add An Image:" />
+            <input type="file" className="file:w-1/2 file:h-40" />
+            <LabelStyle description="Ingredients" text="Enter Ingredients:" />
+            <FormInput placeholderText="Add Ingredients" />
+            <LabelStyle
+              description="recipe instructions"
+              text="Enter Recipe Instructions:"
             />
-            <LabelStyle description="file upload" text="Add an Image" />
-            <input type="file" className="" />
-            <LabelStyle description="Ingredients" text="Enter Ingredients" />
-            <input type="text" placeholder="Add Ingredients" />
+            <FormInput placeholderText="" className="" />
+            <div className="flex flex-row gap-5 mt-6">
+              <FormButton
+                bgColor="bg-primary"
+                text="Save"
+                buttonType="submit"
+              />
+              <FormButton
+                bgColor="bg-accent"
+                text="Cancel"
+                buttonType="button"
+              />
+            </div>
           </form>
         </div>
       </div>
