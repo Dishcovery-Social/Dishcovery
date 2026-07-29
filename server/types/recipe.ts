@@ -14,7 +14,7 @@ export type RecipeWithProfile = Omit<Recipe, "user_id"> & {
   profile_image: string | null;
 };
 
-interface Ingredient {
+export interface Ingredient {
   name: string;
   quantity: number;
   unit: string;
