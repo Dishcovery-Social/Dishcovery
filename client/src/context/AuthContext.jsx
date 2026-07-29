@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { getCurrentUser, logout } from "../services/AuthAPI";
+import { getCurrentUser, logout } from "../services/AuthAPI.js";
 
 // Central auth state for the app, shared via React Context.
 //
