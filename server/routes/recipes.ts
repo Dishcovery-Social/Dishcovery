@@ -11,6 +11,6 @@ router.get("/:id", RecipesController.getRecipeById);
 // POST /recipes
 router.post("/", authenticate, RecipesController.createRecipe);
 
-router.patch("/:id", RecipesController.patchRecipeById);
+router.patch("/:id", authenticate, RecipesController.patchRecipeById);
 
 export default router;
