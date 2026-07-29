@@ -6,8 +6,10 @@
 // empty catch silently discards the parse error and keeps the fallback.
 // Always throws an Error with .status so callers can distinguish 400 vs 500.
 export async function apiFetch(url, options) {
-  console.log(`${import.meta.env.VITE_API_URL}${url}`);
-  const res = await fetch(`${import.meta.env.VITE_API_URL}${url}`, options);
+  const res = await fetch(`${import.meta.env.VITE_API_URL}${url}`, {
+    credentials: "include",
+    ...options,
+  });
   if (res.ok) return res.status === 204 ? null : res.json();
   let message = "Something went wrong. Please try again.";
   try {
