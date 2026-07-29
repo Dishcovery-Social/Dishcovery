@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import "../css/RecipeForm.css";
 
 const RecipeForm = ({
@@ -12,7 +12,7 @@ const RecipeForm = ({
 }) => {
   const [pendingIngredients, setPendingIngredients] = useState([]);
   const [pendingCategories, setPendingCategories] = useState([]);
-  const [Ingredient, setIngredient] = useState({
+  const [ingredient, setIngredient] = useState({
     ingredientName: "",
     quantity: "",
     unit: "",
@@ -70,6 +70,7 @@ const RecipeForm = ({
     return word.charAt(0).toUpperCase() + word.slice(1);
   };
   const handleSubmit = (e) => {
+    e.preventDefault();
     console.log("Entered recipe submit");
     setTitle(recipeTitle);
     setInstructions(recipeInstructions);
@@ -112,7 +113,7 @@ const RecipeForm = ({
         <button
           id="ingredientBtn"
           type="button"
-          onClick={(e) => {
+          onClick={() => {
             setIngredientPopup(true);
           }}
         >
@@ -164,7 +165,7 @@ const RecipeForm = ({
                 <button
                   type="reset"
                   value="Reset"
-                  onClick={(e) => {
+                  onClick={() => {
                     setIngredientPopup(false);
                   }}
                 >
@@ -176,7 +177,10 @@ const RecipeForm = ({
         )}
         <div className="displayIngredient">
           {pendingIngredients.map((item) => (
-            <div className="singleIngredient" key={item.ingredientName + index}>
+            <div
+              className="singleIngredient"
+              key={item.ingredientName + item.quantity}
+            >
               <p className="ingredientName">
                 Ingredient Name: {item.ingredientName}
               </p>
@@ -203,7 +207,7 @@ const RecipeForm = ({
                 type="checkbox"
                 name="category"
                 value={category}
-                onClick={(e) =>
+                onClick={() =>
                   setPendingCategories([...pendingCategories, category])
                 }
               />
