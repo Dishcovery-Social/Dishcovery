@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { findOrCreateCategoryIDs } from "../repositories/categoriesRepository.js";
 import * as RecipesRepository from "../repositories/recipesRepository.js";
+import * as UserRepository from "../repositories/usersRepository.js";
 import type { Ingredient, NewRecipe } from "../types/recipe.js";
 
 const validateRecipeData = (recipeData: Partial<NewRecipe>): string | null => {
@@ -244,7 +245,9 @@ export const patchRecipeById = async (
     return;
   }
 
-  if (request.user.id !== recipe.user_id) {
+  const username = await UserRepository.getUserById(request.user.id);
+
+  if (username === undefined || request.user.username !== username.username) {
     response.status(403).json({ error: "Forbidden" });
     return;
   }
