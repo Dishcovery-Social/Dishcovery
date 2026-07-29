@@ -1,5 +1,5 @@
 import { pool } from "../config/database.js";
-import type { RecipeWithProfile } from "../types/recipe.js";
+import type { NewRecipe, RecipeWithProfile } from "../types/recipe.js";
 
 export const getAllRecipes = async (): Promise<RecipeWithProfile[]> => {
   const results = await pool.query<RecipeWithProfile>(
@@ -46,4 +46,39 @@ export const getRecipeById = async (
     [id],
   );
   return result.rows[0];
+};
+
+export const createRecipe = async (
+  recipeData: NewRecipe,
+  categoryIDs: number[],
+): Promise<RecipeWithProfile> => {
+  const instertRecipeQuery = `
+    INSERT INTO recipes (title, ingredients, instructions, image, user_id)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING id
+  `;
+
+  const recipeResult = await pool.query<{ id: number }>(instertRecipeQuery, [
+    recipeData.title,
+    recipeData.ingredients,
+    recipeData.instructions,
+    recipeData.image,
+    recipeData.user_id,
+  ]);
+
+  const recipeId = recipeResult.rows[0].id;
+
+  for (const categoryId of categoryIDs) {
+    await pool.query(
+      `INSERT INTO recipes_categories (recipe_id, category_id) VALUES ($1, $2)`,
+      [recipeId, categoryId],
+    );
+  }
+
+  const recipe = await getRecipeById(recipeId);
+  if (!recipe) {
+    throw new Error("Failed to retrieve the newly created recipe.");
+  }
+
+  return recipe;
 };

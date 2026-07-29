@@ -1,7 +1,13 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
-import type { RecipeWithProfile } from "../../types/recipe.js";
+import type { NewRecipe, RecipeWithProfile } from "../../types/recipe.js";
 
 const mockQuery = jest.fn<(...args: unknown[]) => Promise<unknown>>();
+
+jest.unstable_mockModule("../../config/database.js", () => ({
+  pool: {
+    query: mockQuery,
+  },
+}));
 
 const getAllRecipesQuery = `SELECT
       recipes.id,
@@ -19,12 +25,6 @@ const getAllRecipesQuery = `SELECT
     LEFT JOIN users ON recipes.user_id = users.id
     GROUP BY recipes.id, users.username, users.profile_image
     ORDER BY recipes.created_at DESC`;
-
-jest.unstable_mockModule("../../config/database.js", () => ({
-  pool: {
-    query: mockQuery,
-  },
-}));
 
 const { getAllRecipes } = await import(
   "../../repositories/recipesRepository.js"
@@ -154,5 +154,101 @@ describe("getRecipeById", () => {
     mockQuery.mockRejectedValue(new Error("DB connection failed"));
 
     await expect(getRecipeById(1)).rejects.toThrow("DB connection failed");
+  });
+});
+
+const insertRecipeQuery = `
+    INSERT INTO recipes (title, ingredients, instructions, image, user_id)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING id
+  `;
+
+const insertCategoryQuery = `INSERT INTO recipes_categories (recipe_id, category_id) VALUES ($1, $2)`;
+
+const { createRecipe } = await import(
+  "../../repositories/recipesRepository.js"
+);
+
+describe("createRecipe", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const newRecipe: NewRecipe = {
+    title: "Pancakes",
+    ingredients: [{ name: "Flour", quantity: 2, unit: "cups" }],
+    instructions: "Mix and cook on a griddle.",
+    image: "pancakes.jpg",
+    user_id: 1,
+  };
+
+  const mockCreatedRecipe: RecipeWithProfile = {
+    id: 10,
+    title: "Pancakes",
+    ingredients: [{ name: "Flour", quantity: 2, unit: "cups" }],
+    instructions: "Mix and cook on a griddle.",
+    image: "pancakes.jpg",
+    username: "chefuser",
+    profile_image: "chefuser.jpg",
+    category: ["Breakfast", "Quick"],
+    created_at: "2024-01-01T00:00:00.000Z",
+  };
+
+  it("creates a recipe, links categories, and returns the full recipe", async () => {
+    const categoryIDs = [3, 5];
+
+    mockQuery
+      // 1. insert into recipes
+      .mockResolvedValueOnce({ rows: [{ id: 10 }] })
+      // 2. insert into recipes_categories (one per category)
+      .mockResolvedValueOnce({ rows: [] })
+      .mockResolvedValueOnce({ rows: [] })
+      // 3. getRecipeById internally calls pool.query
+      .mockResolvedValueOnce({ rows: [mockCreatedRecipe] });
+
+    const result = await createRecipe(newRecipe, categoryIDs);
+
+    expect(mockQuery).toHaveBeenNthCalledWith(1, insertRecipeQuery, [
+      newRecipe.title,
+      newRecipe.ingredients,
+      newRecipe.instructions,
+      newRecipe.image,
+      newRecipe.user_id,
+    ]);
+    expect(mockQuery).toHaveBeenNthCalledWith(2, insertCategoryQuery, [10, 3]);
+    expect(mockQuery).toHaveBeenNthCalledWith(3, insertCategoryQuery, [10, 5]);
+    expect(mockQuery).toHaveBeenCalledTimes(4);
+    expect(result).toEqual(mockCreatedRecipe);
+  });
+
+  it("creates a recipe with no categories", async () => {
+    mockQuery
+      .mockResolvedValueOnce({ rows: [{ id: 10 }] })
+      .mockResolvedValueOnce({ rows: [mockCreatedRecipe] });
+
+    const result = await createRecipe(newRecipe, []);
+
+    expect(mockQuery).toHaveBeenCalledTimes(2);
+    expect(result).toEqual(mockCreatedRecipe);
+  });
+
+  it("propagates an error if the recipe insert fails", async () => {
+    mockQuery.mockRejectedValueOnce(new Error("DB connection failed"));
+
+    await expect(createRecipe(newRecipe, [3])).rejects.toThrow(
+      "DB connection failed",
+    );
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+  });
+
+  it("propagates an error if a category insert fails", async () => {
+    mockQuery
+      .mockResolvedValueOnce({ rows: [{ id: 10 }] })
+      .mockRejectedValueOnce(new Error("Invalid category ID"));
+
+    await expect(createRecipe(newRecipe, [3])).rejects.toThrow(
+      "Invalid category ID",
+    );
+    expect(mockQuery).toHaveBeenCalledTimes(2);
   });
 });
