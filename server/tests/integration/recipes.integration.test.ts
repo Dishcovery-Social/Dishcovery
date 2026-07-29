@@ -12,7 +12,10 @@ jest.unstable_mockModule("../../config/database.js", () => ({
 }));
 
 const mockAuthenticate = jest.fn(
-  (_req: Request, _res: Response, next: NextFunction) => next(),
+  (req: Request, _res: Response, next: NextFunction) => {
+    req.user = { id: 123 };
+    next();
+  },
 );
 
 jest.unstable_mockModule("../../middleware/authenticate.js", () => ({
@@ -114,18 +117,27 @@ describe("DELETE /recipes/:id", () => {
   afterEach(() => {
     jest.clearAllMocks();
     mockAuthenticate.mockImplementation(
-      (_req: Request, _res: Response, next: NextFunction) => next(),
+      (req: Request, _res: Response, next: NextFunction) => {
+        req.user = { id: 123 };
+        next();
+      },
     );
   });
 
   it("returns 401 when the user is not authenticated", async () => {
-    mockAuthenticate.mockImplementation((_req: Request, res: Response) =>
-      res.status(401).json({ error: "Unauthorized" }),
+    mockAuthenticate.mockImplementation(
+      (req: Request, _res: Response, next: NextFunction) => {
+        req.user = undefined;
+        next();
+      },
     );
 
     const response = await request(app).delete("/recipes/1");
 
     expect(response.status).toBe(401);
+    expect(response.body).toEqual({
+      error: "User not authenticated",
+    });
     expect(mockQuery).not.toHaveBeenCalled();
   });
 
@@ -138,12 +150,15 @@ describe("DELETE /recipes/:id", () => {
   });
 
   it("returns 404 when the recipe does not exist", async () => {
-    mockQuery.mockResolvedValue({ rowCount: 0, rows: [] });
+    mockQuery.mockResolvedValue({ rowCount: 0 });
 
     const response = await request(app).delete("/recipes/999");
 
+    expect(mockQuery).toHaveBeenCalledWith(expect.any(String), [999, 123]);
     expect(response.status).toBe(404);
-    expect(response.body).toEqual({ error: "Recipe not found: 999" });
+    expect(response.body).toEqual({
+      error: "Recipe not found: 999",
+    });
   });
 
   it("returns 200 when the recipe is deleted successfully", async () => {

@@ -29,25 +29,40 @@ export const getRecipeById = async (
 };
 
 export const deleteRecipe = async (
-  request: Request,
+  request: Request<{ id: string }>,
   response: Response,
 ): Promise<void> => {
-  const id = parseInt(request.params.id as string, 10);
-  if (Number.isNaN(id)) {
-    console.log(`Invalid recipe ID: ${request.params.id}`);
-    response.status(400).json({ error: "Invalid recipe ID" });
-    return;
-  }
+  const { id } = request.params;
+  const recipeId = parseInt(id, 10);
+
   try {
-    const wasDeleted = await RecipesRepository.deleteRecipeById(id);
-    if (!wasDeleted) {
-      response.status(404).json({ error: `Recipe not found: ${id}` });
+    if (Number.isNaN(recipeId)) {
+      response.status(400).json({ error: "Invalid recipe ID" });
       return;
     }
-  } catch {
-    console.log(`Error deleting recipe: ${id}`);
-    response.status(500).json({ error: `Failed to delete recipe: ${id}` });
-    return;
+
+    const userId = request.user?.id;
+    if (!userId) {
+      response.status(401).json({ error: "User not authenticated" });
+      return;
+    }
+
+    const wasDeleted = await RecipesRepository.deleteRecipeById(
+      recipeId,
+      userId,
+    );
+    if (!wasDeleted) {
+      response.status(404).json({ error: `Recipe not found: ${recipeId}` });
+      return;
+    }
+
+    response
+      .status(200)
+      .json({ message: `Recipe deleted successfully: ${recipeId}` });
+  } catch (error) {
+    console.log(`Error deleting recipe: ${recipeId}`, error);
+    response
+      .status(500)
+      .json({ error: `Failed to delete recipe: ${recipeId}` });
   }
-  response.status(200).json({ message: `Recipe deleted successfully: ${id}` });
 };
