@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import Navbar from "../components/Navbar.jsx";
-import Sidebar from "../components/Sidebar.jsx";
 import { getRecipeById } from "../services/RecipesAPI.js";
 
-export default function RecipeDetails() {
+export default function RecipeDetailsPage() {
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -25,16 +23,14 @@ export default function RecipeDetails() {
   }, [id]);
 
   return (
-    <div>
-      <Navbar />
-      <Sidebar />
+    <>
       {loading ? (
         <p>Loading recipe...</p>
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
-        <div>
-          <div className="w-full max-w-md bg-secondary rounded-3xl m-auto mb-8 mt-8">
+        <>
+          <div className="w-full max-w-md bg-secondary rounded-3xl">
             <div className="flex items-center gap-4 pt-6 pr-6 pb-4 pl-10">
               <img
                 src={data.profile_image}
@@ -71,13 +67,13 @@ export default function RecipeDetails() {
               </div>
             </div>
           </div>
-          <div className="w-full max-w-md bg-primary m-auto">
+          <div className="w-full max-w-md bg-primary">
             <p className="text-secondary text-center font-heading text-lg font-semibold p-1">
               Comments
             </p>
           </div>
-        </div>
+        </>
       )}
-    </div>
+    </>
   );
 }

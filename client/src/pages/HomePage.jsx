@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import CreateIcon from "../assets/Create-Post-Button.svg";
-import Navbar from "../components/Navbar.jsx";
 import RecipeCard from "../components/RecipeCard.jsx";
-import Sidebar from "../components/Sidebar.jsx";
 import { getRecipes } from "../services/RecipesAPI.js";
 
 export default function HomePage() {
@@ -59,6 +57,6 @@ export default function HomePage() {
       >
         <img src={CreateIcon} alt="Create post" className="h-full" />
       </button>
-    </div>
+    </>
   );
 }
