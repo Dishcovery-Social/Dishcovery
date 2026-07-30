@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import "../css/RecipeForm.css";
+import { useState } from "react";
 
 const RecipeForm = ({
   username,
@@ -12,7 +11,7 @@ const RecipeForm = ({
 }) => {
   const [pendingIngredients, setPendingIngredients] = useState([]);
   const [pendingCategories, setPendingCategories] = useState([]);
-  const [ingredient, setIngredient] = useState({
+  const [setIngredient] = useState({
     ingredientName: "",
     quantity: "",
     unit: "",
@@ -79,7 +78,10 @@ const RecipeForm = ({
     setCategories(pendingCategories);
   };
   return (
-    <div className="formHolder">
+    <div
+      className=" w-full max-w-[480px] bg-[#e6d3be] text-[#2b1d14] mx-auto my-5 p-6 rounded-[28px]
+  "
+    >
       <div className="flex items-center gap-4 pt-6 pr-6 pb-4 pl-10">
         <img
           src={profileImage}
@@ -88,9 +90,14 @@ const RecipeForm = ({
         />
         <span>{username}</span>
       </div>
-      <form>
-        <div className="formGroup">
-          <label htmlFor="recipeTitle">Recipe Title</label>
+      <form className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center w-full gap-1.5">
+          <label
+            htmlFor="recipeTitle"
+            className="font-[bold] text-[0.95rem] text-[#2b1d14]"
+          >
+            Recipe Title
+          </label>
           <input
             type="text"
             id="recipeTitle"
@@ -99,11 +106,17 @@ const RecipeForm = ({
             onChange={(e) => setRecipeTitle(e.target.value)}
           />
         </div>
-        <div className="formGroup">
-          <label htmlFor="recipeImage">Image</label>
+        <div className="flex flex-col items-center w-full gap-1.5">
+          <label
+            htmlFor="recipeImage"
+            className="font-[bold] text-[0.95rem] text-[#2b1d14]"
+          >
+            Image
+          </label>
           <input
             type="text"
             id="recipeImage"
+            className="px-3 py-2;"
             placeholder="Enter recipe image url"
             value={recipeImage}
             onChange={(e) => setRecipeImage(e.target.value)}
@@ -113,6 +126,7 @@ const RecipeForm = ({
         <button
           id="ingredientBtn"
           type="button"
+          className="cursor-pointer font-[bold] w-[85%] bg-[#8c5332] text-white text-[0.95rem] text-center p-3 rounded-lg border-[none]"
           onClick={() => {
             setIngredientPopup(true);
           }}
@@ -120,11 +134,17 @@ const RecipeForm = ({
           Add an Ingredient
         </button>
         {ingredientPopup && (
-          <div className="addIngredientPopup">
-            <fieldset className="ingredientCreation">
-              <div className="formGroup">
-                <label htmlFor="ingredientName">Ingredient Name</label>
+          <div className="fixed w-screen h-screen bg-[rgba(0,0,0,0.4)] flex justify-center items-center z-[1000] left-0 top-0">
+            <fieldset className="bg-[#e6d3be] w-[300px] flex flex-col gap-3 p-6 rounded-2xl">
+              <div className="flex flex-col items-center w-full gap-1.5">
+                <label
+                  htmlFor="ingredientName"
+                  className="font-[bold] text-[0.95rem] text-[#2b1d14]"
+                >
+                  Ingredient Name
+                </label>
                 <input
+                  className="text-[#dfc8b7]"
                   id="ingredientName"
                   type="text"
                   placeholder="flour"
@@ -132,9 +152,15 @@ const RecipeForm = ({
                   onChange={(e) => setIngredientName(e.target.value)}
                 />
               </div>
-              <div className="formGroup">
-                <label htmlFor="quantity">Quantity</label>
+              <div className="flex flex-col items-center w-full gap-1.5">
+                <label
+                  htmlFor="quantity"
+                  className="font-[bold] text-[0.95rem] text-[#2b1d14]"
+                >
+                  Quantity
+                </label>
                 <input
+                  className="text-[#dfc8b7]"
                   id="quantity"
                   type="text"
                   placeholder="1.5"
@@ -142,9 +168,15 @@ const RecipeForm = ({
                   onChange={(e) => setQuantity(e.target.value)}
                 ></input>
               </div>
-              <div className="formGroup">
-                <label htmlFor="unit">Unit</label>
+              <div className="flex flex-col items-center w-full gap-1.5">
+                <label
+                  htmlFor="unit"
+                  className="font-[bold] text-[0.95rem] text-[#2b1d14]"
+                >
+                  Unit
+                </label>
                 <input
+                  className="text-[#dfc8b7]"
                   id="unit"
                   type="text"
                   placeholder="cup(s)"
@@ -153,8 +185,9 @@ const RecipeForm = ({
                 ></input>
               </div>
 
-              <div className="buttonGroup">
+              <div className="flex justify-center gap-4 w-full mt-2.5">
                 <button
+                  className="bg-[#94a893] text-[#1c2b1b] font-[bold] text-[0.95rem] cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
                   type="button"
                   onClick={(e) => {
                     handleIngredientSubmit(e);
@@ -163,6 +196,7 @@ const RecipeForm = ({
                   Add Ingredient
                 </button>
                 <button
+                  className=" bg-[#8c5332] text-white font-[bold] text-[0.95rem] cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
                   type="reset"
                   value="Reset"
                   onClick={() => {
@@ -175,10 +209,10 @@ const RecipeForm = ({
             </fieldset>
           </div>
         )}
-        <div className="displayIngredient">
+        <div className="w-[85%] text-center">
           {pendingIngredients.map((item) => (
             <div
-              className="singleIngredient"
+              className="text-[0.85rem] mb-1"
               key={item.ingredientName + item.quantity}
             >
               <p className="ingredientName">
@@ -190,19 +224,28 @@ const RecipeForm = ({
             </div>
           ))}
         </div>
-        <div className="formGroup">
-          <label htmlFor="instructions">Recipe Instructions</label>
+        <div className="flex flex-col items-center w-full gap-1.5">
+          <label
+            htmlFor="instructions"
+            className="font-[bold] text-[0.95rem] text-[#2b1d14]"
+          >
+            Recipe Instructions
+          </label>
           <textarea
+            className="min-h-[140px] resize-y text-left"
             id="instructions"
             placeholder="Enter recipe instructions"
             value={recipeInstructions}
             onChange={(e) => setRecipeInstructions(e.target.value)}
           />
         </div>
-        <div className="categoryOptions">
-          <p>Select recipe categories</p>
+        <div className="w-[85%] flex flex-col items-center gap-2">
+          <p className="font-[bold] m-0">Select recipe categories</p>
           {categoriesOptions.map((category) => (
-            <label key={category}>
+            <label
+              key={category}
+              className="inline-flex items-center gap-1.5 text-[0.85rem] cursor-pointer mx-2 my-1;"
+            >
               <input
                 type="checkbox"
                 name="category"
@@ -215,9 +258,9 @@ const RecipeForm = ({
             </label>
           ))}
         </div>
-        <div className="buttonGroup">
+        <div className="flex justify-center gap-4 w-full mt-2.5">
           <button
-            className="formSubmit"
+            className="bg-[#8c5332] text-white font-[bold] text-[0.95rem] cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
             type="button"
             onClick={(e) => {
               handleSubmit(e);
@@ -226,7 +269,7 @@ const RecipeForm = ({
             Add Recipe
           </button>
           <button
-            className="formCancle"
+            className="bg-[#94a893] text-[#1c2b1b] font-[bold] text-[0.95rem] cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
             type="reset"
             value="Reset"
             onClick={() => {
