@@ -26,7 +26,7 @@ export const handleLogout = (
     request.session.destroy((sessionError) => {
       if (sessionError) return next(sessionError);
       response.clearCookie("connect.sid");
-      response.sendStatus(200);
+      response.sendStatus(204);
     });
   });
 };
