@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import CreateIcon from "../assets/Create-Post-Button.svg";
-import Navbar from "../components/Navbar.jsx";
 import RecipeCard from "../components/RecipeCard.jsx";
-import Sidebar from "../components/Sidebar.jsx";
 import { getRecipes } from "../services/RecipesAPI.js";
 
 export default function HomePage() {
@@ -26,33 +24,29 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div>
-      <Navbar />
-      <Sidebar />
-      <div className="flex flex-col items-center gap-12 mt-12">
-        {loading ? (
-          <p>Loading recipe...</p>
-        ) : error ? (
-          <p>Error: {error.message}</p>
-        ) : recipes.length === 0 ? (
-          <p>No recipes yet.</p>
-        ) : (
-          recipes.map((item) => (
-            <RecipeCard
-              key={item.id}
-              avatarUrl={item.profile_image}
-              username={item.username}
-              recipeId={item.id}
-              title={item.title}
-              instructions={item.instructions}
-              recipeImageUrl={item.image}
-            />
-          ))
-        )}
-      </div>
+    <>
+      {loading ? (
+        <p>Loading recipe...</p>
+      ) : error ? (
+        <p>Error: {error.message}</p>
+      ) : recipes.length === 0 ? (
+        <p>No recipes yet.</p>
+      ) : (
+        recipes.map((item) => (
+          <RecipeCard
+            key={item.id}
+            avatarUrl={item.profile_image}
+            username={item.username}
+            recipeId={item.id}
+            title={item.title}
+            instructions={item.instructions}
+            recipeImageUrl={item.image}
+          />
+        ))
+      )}
       <button type="button" className="fixed right-8 bottom-8 h-20 z-10">
         <img src={CreateIcon} alt="Create post" className="h-full" />
       </button>
-    </div>
+    </>
   );
 }
