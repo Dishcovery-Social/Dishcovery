@@ -1,10 +1,15 @@
 import type { Request, Response } from "express";
 import { findOrCreateCategoryIDs } from "../repositories/categoriesRepository.js";
 import * as RecipesRepository from "../repositories/recipesRepository.js";
-import * as UserRepository from "../repositories/usersRepository.js";
 import type { Ingredient, NewRecipe } from "../types/recipe.js";
+import {
+  categoriesValidation,
+  categoryNormalization,
+} from "./categoriesController.js";
 
-const validateRecipeData = (recipeData: Partial<NewRecipe>): string | null => {
+const validateRecipeData = (
+  recipeData: Partial<NewRecipe> & { category?: string[] },
+): string | null => {
   if ("title" in recipeData) {
     if (
       typeof recipeData.title !== "string" ||
@@ -52,19 +57,18 @@ const validateRecipeData = (recipeData: Partial<NewRecipe>): string | null => {
     }
   }
 
-  if ("category" in recipeData) {
-    if (!Array.isArray(recipeData.category)) {
-      return "Category must be an array";
-    }
-
-    if (
-      !recipeData.category.every(
-        (cat) =>
-          typeof cat === "string" && cat.trim().length > 0 && cat.length <= 100,
-      )
-    ) {
+  if (
+    "category" in recipeData &&
+    recipeData.category !== undefined &&
+    recipeData.category !== null
+  ) {
+    if (!categoriesValidation(recipeData.category)) {
       return "Each category must be a non-empty string with a maximum length of 100 characters";
     }
+
+    recipeData.category = recipeData.category.map((cat: string) =>
+      categoryNormalization(cat),
+    );
   }
 
   return null;
@@ -208,6 +212,7 @@ export const createRecipe = async (
     instructions: recipeData.instructions.trim(),
     image: recipeData.image.trim(),
     user_id: recipeData.user_id,
+    category: recipeData.category,
   };
 
   const categories = recipeData.category.map((cat: string) => cat.trim());
@@ -245,10 +250,8 @@ export const patchRecipeById = async (
     return;
   }
 
-  const username = await UserRepository.getUserById(request.user.id);
-
-  if (username === undefined || request.user.username !== username.username) {
-    response.status(403).json({ error: "Forbidden" });
+  if (request.user.username !== recipe.username) {
+    response.status(403).json({ error: "Recipe " });
     return;
   }
 
@@ -268,6 +271,6 @@ export const patchRecipeById = async (
     response.status(200).json(updatedRecipe);
   } catch (error) {
     console.error("Error updating recipe:", error);
-    response.status(500).json({ error: "Internal server error" });
+    throw new Error("Database error while updating recipe", error as Error);
   }
 };
