@@ -1,14 +1,26 @@
+import { useState } from "react";
 import SearchIcon from "../assets/Search-Icon.svg";
-
-function handleSignUp() {
-  console.log("Sign Up clicked");
-}
-
-function handleSignIn() {
-  console.log("Sign In clicked");
-}
+import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Navbar() {
+  const { user, loading, signIn, signOut } = useAuth();
+  const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const handleSignIn = () => {
+    setIsSigningIn(true);
+    signIn();
+  };
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await signOut();
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
+
   return (
     <header className="flex items-center justify-between bg-primary p-5 font-heading font-medium">
       <span className="font-heading text-secondary text-lg pl-3">
@@ -33,21 +45,38 @@ export default function Navbar() {
             />
           </form>
         </div>
-        <nav className="flex flex-row gap-6 pr-2">
-          <button
-            type="button"
-            className="text-secondary bg-transparent border-none p-0 cursor-pointer"
-            onClick={handleSignIn}
-          >
-            Sign In
-          </button>
-          <button
-            type="button"
-            className="text-secondary bg-transparent border-none p-0 cursor-pointer"
-            onClick={handleSignUp}
-          >
-            Sign Up
-          </button>
+        <nav className="flex flex-row gap-6 items-center pr-2">
+          {loading ? null : user ? (
+            <>
+              <div className="flex items-center gap-2 text-secondary">
+                {user.profile_image && (
+                  <img
+                    src={user.profile_image}
+                    alt={user.username}
+                    className="w-10 h-10 rounded-full"
+                  />
+                )}
+                <span>{user.username}</span>
+              </div>
+              <button
+                type="button"
+                disabled={isSigningOut}
+                className="text-secondary bg-transparent border-none p-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleSignOut}
+              >
+                {isSigningOut ? "Signing Out..." : "Sign Out"}
+              </button>
+            </>
+          ) : (
+            <button
+              type="button"
+              disabled={isSigningIn}
+              className="text-secondary bg-transparent border-none p-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={handleSignIn}
+            >
+              {isSigningIn ? "Redirecting..." : "Sign In via GitHub"}
+            </button>
+          )}
         </nav>
       </div>
     </header>
