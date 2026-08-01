@@ -4,18 +4,23 @@ import type { Request, Response } from "express";
 const mockGetRecipeById = jest.fn<(recipeId: number) => Promise<unknown>>();
 const mockGetAllCommentsForRecipe =
   jest.fn<(recipeId: number) => Promise<unknown>>();
+const mockCreateCommentForRecipe =
+  jest.fn<
+    (recipeId: number, userId: number, body: string) => Promise<unknown>
+  >();
 const mockJson = jest.fn();
 const mockStatus = jest.fn();
 
 jest.unstable_mockModule("../../repositories/commentsRepository.js", () => ({
   getAllCommentsForRecipe: mockGetAllCommentsForRecipe,
+  createCommentForRecipe: mockCreateCommentForRecipe,
 }));
 
 jest.unstable_mockModule("../../repositories/recipesRepository.js", () => ({
   getRecipeById: mockGetRecipeById,
 }));
 
-const { getAllCommentsForRecipe } = await import(
+const { getAllCommentsForRecipe, createCommentForRecipe } = await import(
   "../../controllers/commentsController.js"
 );
 
@@ -83,5 +88,32 @@ describe("getAllCommentsForRecipe", () => {
     expect(mockGetAllCommentsForRecipe).toHaveBeenCalledWith(1);
     expect(mockStatus).toHaveBeenCalledWith(200);
     expect(mockJson).toHaveBeenCalledWith(comments);
+  });
+});
+
+describe("createCommentForRecipe", () => {
+  it("returns 201 with the newly created comment in the profile-enriched shape", async () => {
+    const createdComment = {
+      id: 1,
+      body: "Love it!",
+      recipe_id: 1,
+      created_at: "2024-01-01T00:00:00.000Z",
+      username: "owner",
+      profile_image: "owner.jpg",
+    };
+
+    mockGetRecipeById.mockResolvedValue({ username: "owner" });
+    mockCreateCommentForRecipe.mockResolvedValue(createdComment);
+    const req = buildRequest({
+      body: { body: "Love it!" },
+      user: { id: 7, username: "owner" } as Request["user"],
+    });
+
+    await createCommentForRecipe(req, mockRes);
+
+    expect(mockGetRecipeById).toHaveBeenCalledWith(1);
+    expect(mockCreateCommentForRecipe).toHaveBeenCalledWith(1, 7, "Love it!");
+    expect(mockStatus).toHaveBeenCalledWith(201);
+    expect(mockJson).toHaveBeenCalledWith(createdComment);
   });
 });
