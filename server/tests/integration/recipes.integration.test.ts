@@ -117,6 +117,45 @@ describe("GET /recipes/:id", () => {
   });
 });
 
+describe("GET /recipes/category/:categoryName", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("returns 200 with recipes for the requested category", async () => {
+    mockQuery.mockResolvedValue({ rows: [mockRecipe] });
+
+    const response = await request(app).get("/recipes/category/Breakfast");
+
+    expect(mockQuery).toHaveBeenCalledWith(expect.any(String), ["Breakfast"]);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([mockRecipe]);
+  });
+
+  it("trims whitespace from the category name before querying", async () => {
+    mockQuery.mockResolvedValue({ rows: [] });
+
+    const response = await request(app).get(
+      "/recipes/category/%20%20Breakfast%20%20",
+    );
+
+    expect(mockQuery).toHaveBeenCalledWith(expect.any(String), ["Breakfast"]);
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+
+  it("returns 400 when the category name is blank", async () => {
+    const response = await request(app).get("/recipes/category/%20%20%20");
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error:
+        "Category name must be a non-empty string with a maximum length of 100 characters",
+    });
+    expect(mockQuery).not.toHaveBeenCalled();
+  });
+});
+
 describe("POST /recipes", () => {
   afterEach(() => {
     jest.clearAllMocks();

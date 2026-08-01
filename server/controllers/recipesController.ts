@@ -149,3 +149,27 @@ export const createRecipe = async (
   const newRecipe = await RecipesRepository.createRecipe(recipe, categoryIDs);
   response.status(201).json(newRecipe);
 };
+
+export const getRecipesByCategory = async (
+  request: Request,
+  response: Response,
+): Promise<void> => {
+  const categoryName = request.params.categoryName;
+  if (!categoryName || typeof categoryName !== "string") {
+    response.status(400).json({ error: "Category name is required" });
+    return;
+  }
+
+  const validCategoryName = categoryName.trim();
+  if (validCategoryName.length === 0 || validCategoryName.length > 100) {
+    response.status(400).json({
+      error:
+        "Category name must be a non-empty string with a maximum length of 100 characters",
+    });
+    return;
+  }
+
+  const recipes =
+    await RecipesRepository.getRecipesByCategory(validCategoryName);
+  response.status(200).json(recipes);
+};

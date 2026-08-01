@@ -169,6 +169,10 @@ const { createRecipe } = await import(
   "../../repositories/recipesRepository.js"
 );
 
+const { getRecipesByCategory } = await import(
+  "../../repositories/recipesRepository.js"
+);
+
 describe("createRecipe", () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -250,5 +254,60 @@ describe("createRecipe", () => {
       "Invalid category ID",
     );
     expect(mockQuery).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("getRecipesByCategory", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("returns recipes for a given category", async () => {
+    const mockRows: RecipeWithProfile[] = [
+      {
+        id: 1,
+        title: "Pancakes",
+        ingredients: [
+          { name: "Flour", quantity: 2, unit: "cups" },
+          { name: "Milk", quantity: 1.5, unit: "cups" },
+        ],
+        instructions: "Mix and cook on a griddle.",
+        image: "pancakes.jpg",
+        username: "chefuser",
+        profile_image: "chefuser.jpg",
+        category: ["Breakfast"],
+        created_at: "2024-01-01T00:00:00.000Z",
+      },
+    ];
+
+    mockQuery.mockResolvedValue({ rows: mockRows });
+
+    const result = await getRecipesByCategory("Breakfast");
+
+    expect(mockQuery).toHaveBeenCalledWith(
+      expect.stringContaining("WHERE categories.name = $1"),
+      ["Breakfast"],
+    );
+    expect(result).toEqual(mockRows);
+  });
+
+  it("returns an empty array when there are no recipes for the category", async () => {
+    mockQuery.mockResolvedValue({ rows: [] });
+
+    const result = await getRecipesByCategory("NonExistentCategory");
+
+    expect(mockQuery).toHaveBeenCalledWith(
+      expect.stringContaining("WHERE categories.name = $1"),
+      ["NonExistentCategory"],
+    );
+    expect(result).toEqual([]);
+  });
+
+  it("propagates an error if the query fails", async () => {
+    mockQuery.mockRejectedValue(new Error("DB connection failed"));
+
+    await expect(getRecipesByCategory("Breakfast")).rejects.toThrow(
+      "DB connection failed",
+    );
   });
 });
