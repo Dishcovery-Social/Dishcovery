@@ -4,5 +4,6 @@ import * as CommentsController from "../controllers/commentsController.js";
 const router: Router = Router({ mergeParams: true });
 
 router.get("/", CommentsController.getAllCommentsForRecipe);
+router.post("/", authenticate, CommentsController.createCommentForRecipe);
 
 export default router;
