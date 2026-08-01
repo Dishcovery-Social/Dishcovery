@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 const RecipeForm = ({
   username,
@@ -46,6 +47,7 @@ const RecipeForm = ({
   const [recipeTitle, setRecipeTitle] = useState("");
   const [recipeInstructions, setRecipeInstructions] = useState("");
   const [recipeImage, setRecipeImage] = useState("");
+  const navigate = useNavigate();
 
   const handleIngredientSubmit = (e) => {
     e.preventDefault();
@@ -273,10 +275,10 @@ const RecipeForm = ({
             type="reset"
             value="Reset"
             onClick={() => {
-              window.location.href = "/";
+              navigate("/");
             }}
           >
-            Cancle
+            Cancel
           </button>
         </div>
       </form>
