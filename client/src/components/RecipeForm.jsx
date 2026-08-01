@@ -92,15 +92,13 @@ const RecipeForm = ({
         />
         <span>{username}</span>
       </div>
-      <form className="flex flex-col items-center gap-4">
+      <form className="flex flex-col items-center font-bold">
         <div className="flex flex-col items-center w-full gap-1.5">
-          <label
-            htmlFor="recipeTitle"
-            className="font-[bold] text-[0.95rem] text-[#2b1d14]"
-          >
-            Recipe Title
+          <label htmlFor="recipeTitle" className="m-2">
+            Recipe Title:
           </label>
           <input
+            className="text-center bg-primary placeholder-ink w-3/4 min-h-8 p-1 resize-none overflow-hidden"
             type="text"
             id="recipeTitle"
             placeholder="Enter the recipe title"
@@ -109,44 +107,39 @@ const RecipeForm = ({
           />
         </div>
         <div className="flex flex-col items-center w-full gap-1.5">
-          <label
-            htmlFor="recipeImage"
-            className="font-[bold] text-[0.95rem] text-[#2b1d14]"
-          >
-            Image
+          <label htmlFor="recipeImage" className="m-2">
+            Add an Image:
           </label>
           <input
-            type="text"
-            id="recipeImage"
-            className="px-3 py-2;"
-            placeholder="Enter recipe image url"
-            value={recipeImage}
-            onChange={(e) => setRecipeImage(e.target.value)}
+            type="file"
+            className="file:w-1/2 file:h-40"
+            onChange={(e) =>
+              setRecipeImage(
+                "https://www.eatingwell.com/thmb/m5xUzIOmhWSoXZnY-oZcO9SdArQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/article_291139_the-top-10-healthiest-foods-for-kids_-02-4b745e57928c4786a61b47d8ba920058.jpg",
+              )
+            }
           />
         </div>
 
         <button
           id="ingredientBtn"
           type="button"
-          className="cursor-pointer font-[bold] w-[85%] bg-[#8c5332] text-white text-[0.95rem] text-center p-3 rounded-lg border-[none]"
+          className="bg-primary text-[#4b2e1e] cursor-pointer m-2 w-3/4 min-h-8 rounded-lg border-[none]"
           onClick={() => {
             setIngredientPopup(true);
           }}
         >
-          Add an Ingredient
+          Add Ingredients
         </button>
         {ingredientPopup && (
-          <div className="fixed w-screen h-screen bg-[rgba(0,0,0,0.4)] flex justify-center items-center z-[1000] left-0 top-0">
-            <fieldset className="bg-[#e6d3be] w-[300px] flex flex-col gap-3 p-6 rounded-2xl">
+          <div className="fixed bg-[rgb(230,211,190)] z-[1000] items-center border border-[rgb(43,29,20)]">
+            <fieldset className="flex flex-col items-center font-bold">
               <div className="flex flex-col items-center w-full gap-1.5">
-                <label
-                  htmlFor="ingredientName"
-                  className="font-[bold] text-[0.95rem] text-[#2b1d14]"
-                >
+                <label htmlFor="ingredientName" className="m-2">
                   Ingredient Name
                 </label>
                 <input
-                  className="text-[#dfc8b7]"
+                  className="text-center bg-primary placeholder-ink w-3/4 min-h-8 p-1 resize-none overflow-hidden"
                   id="ingredientName"
                   type="text"
                   placeholder="flour"
@@ -155,14 +148,11 @@ const RecipeForm = ({
                 />
               </div>
               <div className="flex flex-col items-center w-full gap-1.5">
-                <label
-                  htmlFor="quantity"
-                  className="font-[bold] text-[0.95rem] text-[#2b1d14]"
-                >
+                <label htmlFor="quantity" className="m-2">
                   Quantity
                 </label>
                 <input
-                  className="text-[#dfc8b7]"
+                  className="text-center bg-primary placeholder-ink w-3/4 min-h-8 p-1 resize-none overflow-hidden"
                   id="quantity"
                   type="text"
                   placeholder="1.5"
@@ -171,14 +161,11 @@ const RecipeForm = ({
                 ></input>
               </div>
               <div className="flex flex-col items-center w-full gap-1.5">
-                <label
-                  htmlFor="unit"
-                  className="font-[bold] text-[0.95rem] text-[#2b1d14]"
-                >
+                <label htmlFor="unit" className="m-2">
                   Unit
                 </label>
                 <input
-                  className="text-[#dfc8b7]"
+                  className="text-center bg-primary placeholder-ink w-3/4 min-h-8 p-1 resize-none overflow-hidden"
                   id="unit"
                   type="text"
                   placeholder="cup(s)"
@@ -189,7 +176,7 @@ const RecipeForm = ({
 
               <div className="flex justify-center gap-4 w-full mt-2.5">
                 <button
-                  className="bg-[#94a893] text-[#1c2b1b] font-[bold] text-[0.95rem] cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
+                  className="bg-primary text-[#4b2e1e] m-2 cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
                   type="button"
                   onClick={(e) => {
                     handleIngredientSubmit(e);
@@ -198,7 +185,7 @@ const RecipeForm = ({
                   Add Ingredient
                 </button>
                 <button
-                  className=" bg-[#8c5332] text-white font-[bold] text-[0.95rem] cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
+                  className="bg-accent text-[#4b2e1e] m-2 cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
                   type="reset"
                   value="Reset"
                   onClick={() => {
@@ -227,14 +214,11 @@ const RecipeForm = ({
           ))}
         </div>
         <div className="flex flex-col items-center w-full gap-1.5">
-          <label
-            htmlFor="instructions"
-            className="font-[bold] text-[0.95rem] text-[#2b1d14]"
-          >
-            Recipe Instructions
+          <label htmlFor="instructions" className="m-2">
+            Enter Recipe Instructions:
           </label>
           <textarea
-            className="min-h-[140px] resize-y text-left"
+            className="text-center bg-primary placeholder-ink w-3/4  min-h-3/4 resize-y text-left"
             id="instructions"
             placeholder="Enter recipe instructions"
             value={recipeInstructions}
@@ -242,7 +226,7 @@ const RecipeForm = ({
           />
         </div>
         <div className="w-[85%] flex flex-col items-center gap-2">
-          <p className="font-[bold] m-0">Select recipe categories</p>
+          <p className="m-2">Select recipe categories:</p>
           {categoriesOptions.map((category) => (
             <label
               key={category}
@@ -262,16 +246,16 @@ const RecipeForm = ({
         </div>
         <div className="flex justify-center gap-4 w-full mt-2.5">
           <button
-            className="bg-[#8c5332] text-white font-[bold] text-[0.95rem] cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
+            className="bg-primary text-[#4b2e1e] m-2 cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
             type="button"
             onClick={(e) => {
               handleSubmit(e);
             }}
           >
-            Add Recipe
+            Save
           </button>
           <button
-            className="bg-[#94a893] text-[#1c2b1b] font-[bold] text-[0.95rem] cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
+            className="bg-accent text-[#4b2e1e] m-2 cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
             type="reset"
             value="Reset"
             onClick={() => {
