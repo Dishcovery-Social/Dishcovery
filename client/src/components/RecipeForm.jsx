@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import Select from "react-select";
 
 const RecipeForm = ({
   username,
@@ -19,25 +20,25 @@ const RecipeForm = ({
   });
   const [ingredientPopup, setIngredientPopup] = useState(false);
   const categoriesOptions = [
-    "sweet",
-    "salty",
-    "umami",
-    "bitter",
-    "sour",
-    "spicy",
-    "high-protein",
-    "low-calorie",
-    "high-fiber",
-    "vegan",
-    "vegetarian",
-    "Mediterranean",
-    "healthy",
-    "comfort",
-    "breakfast",
-    "lunch",
-    "dinner",
-    "kid-friendly",
-    "gluten-free",
+    { value: "sweet", label: "Sweet" },
+    { value: "salty", label: "Salty" },
+    { value: "umami", label: "Umami" },
+    { value: "bitter", label: "Bitter" },
+    { value: "sour", label: "Sour" },
+    { value: "spicy", label: "Spicy" },
+    { value: "high-protein", label: "High-protein" },
+    { value: "low-calorie", label: "Low-calorie" },
+    { value: "high-fiber", label: "High-fiber" },
+    { value: "vegan", label: "Vegan" },
+    { value: "vegetarian", label: "Vegetarian" },
+    { value: "Mediterranean", label: "Mediterranean" },
+    { value: "healthy", label: "Healthy" },
+    { value: "comfort", label: "Comfort" },
+    { value: "breakfast", label: "Breakfast" },
+    { value: "lunch", label: "Lunch" },
+    { value: "dinner", label: "Dinner" },
+    { value: "kid-friendly", label: "Kid-friendly" },
+    { value: "gluten-free", label: "Gluten-free" },
   ];
 
   const [ingredientName, setIngredientName] = useState("");
@@ -67,9 +68,9 @@ const RecipeForm = ({
     ]);
     setIngredientPopup(false);
   };
-  const capitalize = (word) => {
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  };
+  // const capitalize = (word) => {
+  //   return word.charAt(0).toUpperCase() + word.slice(1);
+  // };
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Entered recipe submit");
@@ -98,7 +99,7 @@ const RecipeForm = ({
             Recipe Title:
           </label>
           <input
-            className="text-center bg-primary placeholder-ink w-3/4 min-h-8 p-1 resize-none overflow-hidden"
+            className="text-center rounded-sm bg-primary placeholder-ink w-3/4 min-h-8 p-1 resize-none overflow-hidden"
             type="text"
             id="recipeTitle"
             placeholder="Enter the recipe title"
@@ -218,7 +219,7 @@ const RecipeForm = ({
             Enter Recipe Instructions:
           </label>
           <textarea
-            className="text-center bg-primary placeholder-ink w-3/4  min-h-3/4 resize-y text-left"
+            className="text-center rounded-sm bg-primary placeholder-ink w-3/4  min-h-3/4 resize-y text-left"
             id="instructions"
             placeholder="Enter recipe instructions"
             value={recipeInstructions}
@@ -227,7 +228,45 @@ const RecipeForm = ({
         </div>
         <div className="w-[85%] flex flex-col items-center gap-2">
           <p className="m-2">Select recipe categories:</p>
-          {categoriesOptions.map((category) => (
+          <Select
+            options={categoriesOptions}
+            value={pendingCategories}
+            onChange={(e) => {
+              setPendingCategories(e);
+            }}
+            isMulti={true}
+            unstyled
+            classNames={{
+              container: () => "w-3/4",
+              control: () =>
+                "!bg-primary !border-none !rounded-lg !min-h-10 !shadow-none cursor-pointer p-1",
+              valueContainer: () => "gap-1.5 justify-center",
+              multiValue: () =>
+                "!bg-black/20 !rounded-md text-ink overflow-hidden",
+              multiValueLabel: () => "!text-ink font-bold px-2 py-0.5",
+              multiValueRemove: () =>
+                "!text-ink hover:!bg-black/30 transition-colors cursor-pointer",
+              placeholder: () => "!text-ink text-center opacity-80",
+              input: () => "!text-ink text-center",
+              indicatorsContainer: () => "!text-ink",
+              dropdownIndicator: () =>
+                "!text-ink opacity-70 hover:opacity-100 cursor-pointer",
+              clearIndicator: () =>
+                "!text-ink opacity-70 hover:opacity-100 cursor-pointer",
+              menu: () =>
+                "!bg-primary !rounded-lg !mt-2 overflow-hidden shadow-lg",
+              option: ({ isFocused, isSelected }) =>
+                `cursor-pointer text-center text-ink py-2 ${
+                  isSelected
+                    ? "!bg-black/30 font-bold"
+                    : isFocused
+                      ? "!bg-black/15"
+                      : ""
+                }`,
+            }}
+          />
+
+          {/* {categoriesOptions.map((category) => (
             <label
               key={category}
               className="inline-flex items-center gap-1.5 text-[0.85rem] cursor-pointer mx-2 my-1;"
@@ -240,9 +279,9 @@ const RecipeForm = ({
                   setPendingCategories([...pendingCategories, category])
                 }
               />
-              {capitalize(category)}
-            </label>
-          ))}
+              {capitalize(category)} */}
+          {/* </label>
+          ))} */}
         </div>
         <div className="flex justify-center gap-4 w-full mt-2.5">
           <button
