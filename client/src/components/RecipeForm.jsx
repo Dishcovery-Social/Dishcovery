@@ -68,9 +68,7 @@ const RecipeForm = ({
     ]);
     setIngredientPopup(false);
   };
-  // const capitalize = (word) => {
-  //   return word.charAt(0).toUpperCase() + word.slice(1);
-  // };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Entered recipe submit");
@@ -265,23 +263,6 @@ const RecipeForm = ({
                 }`,
             }}
           />
-
-          {/* {categoriesOptions.map((category) => (
-            <label
-              key={category}
-              className="inline-flex items-center gap-1.5 text-[0.85rem] cursor-pointer mx-2 my-1;"
-            >
-              <input
-                type="checkbox"
-                name="category"
-                value={category}
-                onClick={() =>
-                  setPendingCategories([...pendingCategories, category])
-                }
-              />
-              {capitalize(category)} */}
-          {/* </label>
-          ))} */}
         </div>
         <div className="flex justify-center gap-4 w-full mt-2.5">
           <button
