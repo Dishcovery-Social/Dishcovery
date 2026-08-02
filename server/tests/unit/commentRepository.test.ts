@@ -21,7 +21,9 @@ const getAllCommentsQuery = `SELECT
     WHERE comments.recipe_id = $1
     ORDER BY comments.created_at ASC`;
 
-const { getAllCommentsForRecipe } = await import(
+const deleteCommentQuery = `DELETE FROM comments WHERE id = $1 AND user_id = $2`;
+
+const { getAllCommentsForRecipe, deleteCommentById } = await import(
   "../../repositories/commentsRepository.js"
 );
 
@@ -73,5 +75,37 @@ describe("getAllCommentsForRecipe", () => {
 
     expect(mockQuery).toHaveBeenCalledWith(getAllCommentsQuery, [1]);
     expect(result).toEqual([]);
+  });
+});
+
+describe("deleteCommentById", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("deletes the comment owned by the user", async () => {
+    mockQuery.mockResolvedValue({ rowCount: 1 });
+
+    await expect(deleteCommentById(5, 2)).resolves.toBeUndefined();
+
+    expect(mockQuery).toHaveBeenCalledWith(deleteCommentQuery, [5, 2]);
+  });
+
+  it("throws when no comment is deleted", async () => {
+    mockQuery.mockResolvedValue({ rowCount: 0 });
+
+    await expect(deleteCommentById(5, 2)).rejects.toThrow(
+      "Comment not deleted.",
+    );
+
+    expect(mockQuery).toHaveBeenCalledWith(deleteCommentQuery, [5, 2]);
+  });
+
+  it("propagates an error if the delete query fails", async () => {
+    mockQuery.mockRejectedValue(new Error("DB connection failed"));
+
+    await expect(deleteCommentById(5, 2)).rejects.toThrow(
+      "DB connection failed",
+    );
   });
 });
