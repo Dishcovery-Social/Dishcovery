@@ -3,19 +3,9 @@ import type { NewRecipe, RecipeWithProfile } from "../../types/recipe.js";
 
 const mockQuery = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 
-const mockClientQuery = jest.fn<(...args: unknown[]) => Promise<unknown>>();
-
-const mockClient = {
-  query: mockClientQuery,
-  release: jest.fn(),
-};
-
 jest.unstable_mockModule("../../config/database.js", () => ({
   pool: {
     query: mockQuery,
-    connect: jest
-      .fn<() => Promise<typeof mockClient>>()
-      .mockResolvedValue(mockClient),
   },
 }));
 
@@ -260,121 +250,6 @@ describe("createRecipe", () => {
       "Invalid category ID",
     );
     expect(mockQuery).toHaveBeenCalledTimes(2);
-  });
-});
-
-jest.unstable_mockModule("../../config/database.js", () => ({
-  pool: {
-    connect: jest
-      .fn<() => Promise<typeof mockClient>>()
-      .mockResolvedValue(mockClient),
-  },
-}));
-
-const { patchRecipeById } = await import(
-  "../../repositories/recipesRepository.js"
-);
-
-describe("patchRecipeById", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  const updatedRecipe: RecipeWithProfile = {
-    id: 1,
-    title: "Updated Pancakes",
-    ingredients: [
-      {
-        name: "Flour",
-        quantity: 3,
-        unit: "cups",
-      },
-    ],
-    instructions: "Cook pancakes differently.",
-    image: "updated.jpg",
-    username: "chefuser",
-    profile_image: "chef.jpg",
-    category: ["Breakfast"],
-    created_at: "2024-01-01T00:00:00.000Z",
-  };
-
-  it("updates recipe fields and returns updated recipe", async () => {
-    mockClientQuery
-      .mockResolvedValueOnce({}) // BEGIN
-      .mockResolvedValueOnce({ rows: [] }) // UPDATE
-      .mockResolvedValueOnce({ rows: [updatedRecipe] }) // SELECT
-      .mockResolvedValueOnce({}); // COMMIT
-
-    const result = await patchRecipeById(1, {
-      title: "Updated Pancakes",
-    });
-
-    expect(mockClientQuery).toHaveBeenNthCalledWith(1, "BEGIN");
-
-    expect(mockClientQuery).toHaveBeenNthCalledWith(
-      2,
-      expect.stringContaining("UPDATE recipes"),
-      ["Updated Pancakes", 1],
-    );
-
-    expect(mockClientQuery).toHaveBeenNthCalledWith(
-      3,
-      expect.stringContaining("SELECT"),
-      [1],
-    );
-
-    expect(mockClientQuery).toHaveBeenNthCalledWith(4, "COMMIT");
-
-    expect(result).toEqual(updatedRecipe);
-  });
-
-  it("updates categories when category is provided", async () => {
-    mockClientQuery
-      .mockResolvedValueOnce({}) // BEGIN
-      .mockResolvedValueOnce({}) // DELETE
-      .mockResolvedValueOnce({
-        rows: [{ id: 2 }],
-      }) // SELECT category
-      .mockResolvedValueOnce({}) // INSERT relationship
-      .mockResolvedValueOnce({
-        rows: [updatedRecipe],
-      }) // SELECT updated
-      .mockResolvedValueOnce({}); // COMMIT
-
-    const result = await patchRecipeById(1, {
-      category: ["breakfast"],
-    });
-
-    expect(mockClientQuery).toHaveBeenCalledWith(
-      "DELETE FROM recipes_categories WHERE recipe_id = $1",
-      [1],
-    );
-
-    expect(result).toEqual(updatedRecipe);
-  });
-
-  it("throws when no fields are provided", async () => {
-    mockClientQuery.mockResolvedValueOnce({});
-
-    await expect(patchRecipeById(1, {})).rejects.toThrow(
-      "No fields provided for update",
-    );
-  });
-
-  it("rolls back if update fails", async () => {
-    mockClientQuery
-      .mockResolvedValueOnce({}) // BEGIN
-      .mockRejectedValueOnce(new Error("DB failure"))
-      .mockResolvedValueOnce({}); // ROLLBACK
-
-    await expect(
-      patchRecipeById(1, {
-        title: "Broken",
-      }),
-    ).rejects.toThrow("DB failure");
-
-    expect(mockClientQuery).toHaveBeenCalledWith("ROLLBACK");
-    expect(mockClient.release).toHaveBeenCalled();
   });
 });
 

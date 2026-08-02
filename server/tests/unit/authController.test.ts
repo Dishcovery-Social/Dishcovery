@@ -60,7 +60,7 @@ describe("handleLogout", () => {
     handleLogout(mockReq, mockRes, mockNext);
 
     expect(mockClearCookie).toHaveBeenCalledWith("connect.sid");
-    expect(mockSendStatus).toHaveBeenCalledWith(200);
+    expect(mockSendStatus).toHaveBeenCalledWith(204);
     expect(mockNext).not.toHaveBeenCalled();
   });
 

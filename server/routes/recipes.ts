@@ -13,4 +13,6 @@ router.post("/", authenticate, RecipesController.createRecipe);
 
 router.patch("/:id", authenticate, RecipesController.patchRecipeById);
 
+router.delete("/:id", authenticate, RecipesController.deleteRecipe);
+
 export default router;

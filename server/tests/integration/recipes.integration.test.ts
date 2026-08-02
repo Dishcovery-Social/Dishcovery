@@ -29,13 +29,7 @@ jest.unstable_mockModule("../../config/database.js", () => ({
 }));
 
 const mockAuthenticate = jest.fn(
-  (req: Request, _res: Response, next: NextFunction) => {
-    req.user = {
-      id: 1,
-      username: "chefuser",
-    };
-    next();
-  },
+  (_req: Request, _res: Response, next: NextFunction) => next(),
 );
 
 jest.unstable_mockModule("../../middleware/authenticate.js", () => ({
@@ -310,6 +304,74 @@ describe("PATCH /recipes/:id", () => {
     const response = await request(app).patch("/recipes/1").send({
       title: "Updated Pancakes",
     });
+
+    expect(response.status).toBe(500);
+  });
+});
+
+describe("DELETE /recipes/:id", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+    mockAuthenticate.mockImplementation(
+      (req: Request, _res: Response, next: NextFunction) => {
+        req.user = { id: 123 };
+        next();
+      },
+    );
+  });
+
+  it("returns 401 when the user is not authenticated", async () => {
+    mockAuthenticate.mockImplementation(
+      (req: Request, _res: Response, next: NextFunction) => {
+        req.user = undefined;
+        next();
+      },
+    );
+
+    const response = await request(app).delete("/recipes/1");
+
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({
+      error: "User not authenticated",
+    });
+    expect(mockQuery).not.toHaveBeenCalled();
+  });
+
+  it("returns 400 when the id is not numeric", async () => {
+    const response = await request(app).delete("/recipes/abc");
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: "Invalid recipe ID" });
+    expect(mockQuery).not.toHaveBeenCalled();
+  });
+
+  it("returns 404 when the recipe does not exist", async () => {
+    mockQuery.mockResolvedValue({ rowCount: 0 });
+
+    const response = await request(app).delete("/recipes/999");
+
+    expect(mockQuery).toHaveBeenCalledWith(expect.any(String), [999, 123]);
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({
+      error: "Recipe not found: 999",
+    });
+  });
+
+  it("returns 200 when the recipe is deleted successfully", async () => {
+    mockQuery.mockResolvedValue({ rowCount: 1, rows: [] });
+
+    const response = await request(app).delete("/recipes/1");
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      message: "Recipe deleted successfully: 1",
+    });
+  });
+
+  it("returns 500 when the database query fails", async () => {
+    mockQuery.mockRejectedValue(new Error("DB connection failed"));
+
+    const response = await request(app).delete("/recipes/1");
 
     expect(response.status).toBe(500);
   });
