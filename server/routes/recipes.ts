@@ -11,4 +11,6 @@ router.get("/:id", RecipesController.getRecipeById);
 // POST /recipes
 router.post("/", authenticate, RecipesController.createRecipe);
 
+router.delete("/:id", authenticate, RecipesController.deleteRecipe);
+
 export default router;

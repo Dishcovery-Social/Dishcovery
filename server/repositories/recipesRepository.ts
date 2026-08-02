@@ -82,3 +82,14 @@ export const createRecipe = async (
 
   return recipe;
 };
+
+export const deleteRecipeById = async (
+  id: number,
+  userId: number,
+): Promise<boolean> => {
+  const deleted = await pool.query(
+    "DELETE FROM recipes WHERE id = $1 AND user_id = $2",
+    [id, userId],
+  );
+  return (deleted.rowCount ?? 0) > 0;
+};
