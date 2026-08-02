@@ -251,7 +251,9 @@ export const patchRecipeById = async (
   }
 
   if (request.user.username !== recipe.username) {
-    response.status(403).json({ error: "Recipe " });
+    response
+      .status(403)
+      .json({ error: "User is not the owner of this recipe" });
     return;
   }
 
@@ -271,6 +273,6 @@ export const patchRecipeById = async (
     response.status(200).json(updatedRecipe);
   } catch (error) {
     console.error("Error updating recipe:", error);
-    throw new Error("Database error while updating recipe", error as Error);
+    throw new Error("Database error while updating recipe", { cause: error });
   }
 };
