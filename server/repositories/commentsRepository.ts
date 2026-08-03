@@ -53,10 +53,6 @@ export const createCommentForRecipe = async (
     [recipeId, userId, body],
   );
 
-  if (results.rows.length === 0) {
-    throw new Error("Failed to create comment");
-  }
-
   const createdComment = await getCommentById(results.rows[0].id);
   if (!createdComment) {
     throw new Error("Failed to retrieve the newly created comment");

@@ -48,15 +48,15 @@ export const createCommentForRecipe = async (
     return;
   }
 
+  if (!request.user?.id) {
+    response.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
   const recipe = await getRecipeById(recipeId);
   if (!recipe) {
     console.log(`Recipe not found: ${recipeId}`);
     response.status(404).json({ error: `Recipe not found: ${recipeId}` });
-    return;
-  }
-
-  if (!request.user?.username) {
-    response.status(401).json({ error: "Unauthorized" });
     return;
   }
 
