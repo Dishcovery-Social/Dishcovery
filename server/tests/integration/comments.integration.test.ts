@@ -1,7 +1,6 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import type { NextFunction, Request, Response } from "express";
 import request from "supertest";
-import type { CommentWithProfile } from "../../types/comments.js";
 
 const mockGetRecipeById = jest.fn<(recipeId: number) => Promise<unknown>>();
 const mockGetAllCommentsForRecipe =
