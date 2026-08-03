@@ -191,7 +191,7 @@ const RecipeForm = ({
                     setIngredientPopup(false);
                   }}
                 >
-                  Cancle
+                  Cancel
                 </button>
               </div>
             </fieldset>
@@ -207,7 +207,7 @@ const RecipeForm = ({
                 Ingredient Name: {item.ingredientName}
               </p>
               <p className="quantityAndUnit">
-                Quanitity: {item.quantity} {item.unit}
+                Quantity: {item.quantity} {item.unit}
               </p>
             </div>
           ))}
