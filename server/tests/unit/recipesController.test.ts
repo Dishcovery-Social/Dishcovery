@@ -1,11 +1,12 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import type { Request, Response } from "express";
 
+const mockGetAllRecipes = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 const mockGetRecipesByCategory =
   jest.fn<(...args: unknown[]) => Promise<unknown>>();
 
 jest.unstable_mockModule("../../repositories/recipesRepository.js", () => ({
-  getAllRecipes: jest.fn(),
+  getAllRecipes: mockGetAllRecipes,
   getRecipeById: jest.fn(),
   createRecipe: jest.fn(),
   getRecipesByCategory: mockGetRecipesByCategory,
@@ -15,7 +16,7 @@ jest.unstable_mockModule("../../repositories/categoriesRepository.js", () => ({
   findOrCreateCategoryIDs: jest.fn(),
 }));
 
-const { getRecipesByCategory } = await import(
+const { getAllRecipes } = await import(
   "../../controllers/recipesController.js"
 );
 
@@ -30,77 +31,64 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe("getRecipesByCategory", () => {
-  it("returns 200 with recipes for a valid category", async () => {
+describe("getAllRecipes (category query)", () => {
+  it("calls getRecipesByCategory when query param is provided", async () => {
     const mockRecipes = [{ id: 1, title: "Pancakes", category: ["Breakfast"] }];
     const mockRequest = {
-      params: { categoryName: "Breakfast" },
+      query: { category: "Breakfast" },
     } as unknown as Request;
 
     mockGetRecipesByCategory.mockResolvedValue(mockRecipes);
 
-    await getRecipesByCategory(mockRequest, mockResponse);
+    await getAllRecipes(mockRequest, mockResponse);
 
     expect(mockGetRecipesByCategory).toHaveBeenCalledWith("Breakfast");
     expect(mockStatus).toHaveBeenCalledWith(200);
     expect(mockJson).toHaveBeenCalledWith(mockRecipes);
   });
 
-  it("trims the category name before querying", async () => {
+  it("trims the category query before querying", async () => {
     const mockRequest = {
-      params: { categoryName: "  Breakfast  " },
+      query: { category: "  Breakfast  " },
     } as unknown as Request;
 
     mockGetRecipesByCategory.mockResolvedValue([]);
 
-    await getRecipesByCategory(mockRequest, mockResponse);
+    await getAllRecipes(mockRequest, mockResponse);
 
     expect(mockGetRecipesByCategory).toHaveBeenCalledWith("Breakfast");
     expect(mockStatus).toHaveBeenCalledWith(200);
     expect(mockJson).toHaveBeenCalledWith([]);
   });
 
-  it("returns 400 when the category name is missing", async () => {
+  it("calls getAllRecipes when no category is provided", async () => {
     const mockRequest = {
-      params: {},
+      query: {},
     } as unknown as Request;
 
-    await getRecipesByCategory(mockRequest, mockResponse);
+    const mockRecipes = [{ id: 2, title: "Waffles", category: [] }];
+    mockGetAllRecipes.mockResolvedValue(mockRecipes);
 
-    expect(mockStatus).toHaveBeenCalledWith(400);
-    expect(mockJson).toHaveBeenCalledWith({
-      error: "Category name is required",
-    });
-    expect(mockGetRecipesByCategory).not.toHaveBeenCalled();
+    await getAllRecipes(mockRequest, mockResponse);
+
+    expect(mockGetAllRecipes).toHaveBeenCalled();
+    expect(mockStatus).toHaveBeenCalledWith(200);
+    expect(mockJson).toHaveBeenCalledWith(mockRecipes);
   });
 
-  it("returns 400 when the category name is blank", async () => {
+  it("treats blank category as no filter and calls getAllRecipes", async () => {
     const mockRequest = {
-      params: { categoryName: "   " },
+      query: { category: "   " },
     } as unknown as Request;
 
-    await getRecipesByCategory(mockRequest, mockResponse);
+    const mockRecipes = [{ id: 3, title: "Toast", category: [] }];
+    mockGetAllRecipes.mockResolvedValue(mockRecipes);
 
-    expect(mockStatus).toHaveBeenCalledWith(400);
-    expect(mockJson).toHaveBeenCalledWith({
-      error:
-        "Category name must be a non-empty string with a maximum length of 100 characters",
-    });
+    await getAllRecipes(mockRequest, mockResponse);
+
     expect(mockGetRecipesByCategory).not.toHaveBeenCalled();
-  });
-
-  it("returns 400 when the category name is too long", async () => {
-    const mockRequest = {
-      params: { categoryName: "a".repeat(101) },
-    } as unknown as Request;
-
-    await getRecipesByCategory(mockRequest, mockResponse);
-
-    expect(mockStatus).toHaveBeenCalledWith(400);
-    expect(mockJson).toHaveBeenCalledWith({
-      error:
-        "Category name must be a non-empty string with a maximum length of 100 characters",
-    });
-    expect(mockGetRecipesByCategory).not.toHaveBeenCalled();
+    expect(mockGetAllRecipes).toHaveBeenCalled();
+    expect(mockStatus).toHaveBeenCalledWith(200);
+    expect(mockJson).toHaveBeenCalledWith(mockRecipes);
   });
 });

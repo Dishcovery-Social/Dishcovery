@@ -4,10 +4,18 @@ import * as RecipesRepository from "../repositories/recipesRepository.js";
 import type { Ingredient, NewRecipe } from "../types/recipe.js";
 
 export const getAllRecipes = async (
-  _request: Request,
+  request: Request,
   response: Response,
 ): Promise<void> => {
-  const recipes = await RecipesRepository.getAllRecipes();
+  const category =
+    typeof request.query.category === "string"
+      ? request.query.category.trim()
+      : undefined;
+
+  const recipes = category
+    ? await RecipesRepository.getRecipesByCategory(category)
+    : await RecipesRepository.getAllRecipes();
+
   response.status(200).json(recipes);
 };
 
@@ -148,28 +156,4 @@ export const createRecipe = async (
   const categoryIDs = await findOrCreateCategoryIDs(categories);
   const newRecipe = await RecipesRepository.createRecipe(recipe, categoryIDs);
   response.status(201).json(newRecipe);
-};
-
-export const getRecipesByCategory = async (
-  request: Request,
-  response: Response,
-): Promise<void> => {
-  const categoryName = request.params.categoryName;
-  if (!categoryName || typeof categoryName !== "string") {
-    response.status(400).json({ error: "Category name is required" });
-    return;
-  }
-
-  const validCategoryName = categoryName.trim();
-  if (validCategoryName.length === 0 || validCategoryName.length > 100) {
-    response.status(400).json({
-      error:
-        "Category name must be a non-empty string with a maximum length of 100 characters",
-    });
-    return;
-  }
-
-  const recipes =
-    await RecipesRepository.getRecipesByCategory(validCategoryName);
-  response.status(200).json(recipes);
 };

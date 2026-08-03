@@ -117,7 +117,7 @@ describe("GET /recipes/:id", () => {
   });
 });
 
-describe("GET /recipes/category/:categoryName", () => {
+describe("GET /recipes with category query", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -125,7 +125,9 @@ describe("GET /recipes/category/:categoryName", () => {
   it("returns 200 with recipes for the requested category", async () => {
     mockQuery.mockResolvedValue({ rows: [mockRecipe] });
 
-    const response = await request(app).get("/recipes/category/Breakfast");
+    const response = await request(app).get("/recipes").query({
+      category: "Breakfast",
+    });
 
     expect(mockQuery).toHaveBeenCalledWith(expect.any(String), ["Breakfast"]);
     expect(response.status).toBe(200);
@@ -135,24 +137,25 @@ describe("GET /recipes/category/:categoryName", () => {
   it("trims whitespace from the category name before querying", async () => {
     mockQuery.mockResolvedValue({ rows: [] });
 
-    const response = await request(app).get(
-      "/recipes/category/%20%20Breakfast%20%20",
-    );
+    const response = await request(app)
+      .get("/recipes")
+      .query({ category: "  Breakfast  " });
 
     expect(mockQuery).toHaveBeenCalledWith(expect.any(String), ["Breakfast"]);
     expect(response.status).toBe(200);
     expect(response.body).toEqual([]);
   });
 
-  it("returns 400 when the category name is blank", async () => {
-    const response = await request(app).get("/recipes/category/%20%20%20");
+  it("treats blank category as no filter and returns all recipes", async () => {
+    mockQuery.mockResolvedValue({ rows: [mockRecipe] });
 
-    expect(response.status).toBe(400);
-    expect(response.body).toEqual({
-      error:
-        "Category name must be a non-empty string with a maximum length of 100 characters",
-    });
-    expect(mockQuery).not.toHaveBeenCalled();
+    const response = await request(app)
+      .get("/recipes")
+      .query({ category: "   " });
+
+    expect(mockQuery).toHaveBeenCalled();
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([mockRecipe]);
   });
 });
 

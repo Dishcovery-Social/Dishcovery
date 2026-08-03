@@ -9,6 +9,9 @@ jest.unstable_mockModule("../../config/database.js", () => ({
   },
 }));
 
+const { getAllRecipes, getRecipeById, createRecipe, getRecipesByCategory } =
+  await import("../../repositories/recipesRepository.js");
+
 const getAllRecipesQuery = `SELECT
       recipes.id,
       recipes.title,
@@ -25,10 +28,6 @@ const getAllRecipesQuery = `SELECT
     LEFT JOIN users ON recipes.user_id = users.id
     GROUP BY recipes.id, users.username, users.profile_image
     ORDER BY recipes.created_at DESC`;
-
-const { getAllRecipes } = await import(
-  "../../repositories/recipesRepository.js"
-);
 
 describe("getAllRecipes", () => {
   afterEach(() => {
@@ -108,10 +107,6 @@ const getRecipeByIdQuery = `SELECT
     WHERE recipes.id = $1
     GROUP BY recipes.id, users.username, users.profile_image`;
 
-const { getRecipeById } = await import(
-  "../../repositories/recipesRepository.js"
-);
-
 describe("getRecipeById", () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -164,14 +159,6 @@ const insertRecipeQuery = `
   `;
 
 const insertCategoryQuery = `INSERT INTO recipes_categories (recipe_id, category_id) VALUES ($1, $2)`;
-
-const { createRecipe } = await import(
-  "../../repositories/recipesRepository.js"
-);
-
-const { getRecipesByCategory } = await import(
-  "../../repositories/recipesRepository.js"
-);
 
 describe("createRecipe", () => {
   afterEach(() => {
