@@ -48,11 +48,17 @@ const mockComment = {
   profile_image: "testuser.jpg",
 };
 
-describe("GET /recipes/:recipeId/comments", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+afterEach(() => {
+  jest.clearAllMocks();
+  mockAuthenticate.mockImplementation(
+    (req: Request, _res: Response, next: NextFunction) => {
+      req.user = { id: 1, username: "testuser" } as Request["user"];
+      next();
+    },
+  );
+});
 
+describe("GET /recipes/:recipeId/comments", () => {
   it("returns 200 with all comments for recipe 1", async () => {
     mockGetRecipeById.mockResolvedValue({ username: "testuser" });
     mockGetAllCommentsForRecipe.mockResolvedValue([mockComment]);
@@ -113,10 +119,6 @@ describe("GET /recipes/:recipeId/comments", () => {
 });
 
 describe("POST /recipes/:recipeId/comments", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it("returns 201 with the created comment in the profile-enriched shape", async () => {
     mockGetRecipeById.mockResolvedValue({ username: "testuser" });
     mockCreateCommentForRecipe.mockResolvedValue(mockComment);
@@ -155,23 +157,7 @@ describe("POST /recipes/:recipeId/comments", () => {
 });
 
 describe("DELETE /recipes/:recipeId/comments/:commentId", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-    mockAuthenticate.mockImplementation(
-      (req: Request, _res: Response, next: NextFunction) => {
-        req.user = { id: 1, username: "testuser" } as Request["user"];
-        next();
-      },
-    );
-  });
-
   it("returns 204 when the authenticated user deletes their comment", async () => {
-    mockAuthenticate.mockImplementation(
-      (req: Request, _res: Response, next: NextFunction) => {
-        req.user = { id: 1, username: "testuser" } as Request["user"];
-        next();
-      },
-    );
     mockGetCommentById.mockResolvedValue({ username: "testuser" });
     mockDeleteCommentById.mockResolvedValue();
 

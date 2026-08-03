@@ -26,13 +26,8 @@ jest.unstable_mockModule("../../repositories/recipesRepository.js", () => ({
   getRecipeById: mockGetRecipeById,
 }));
 
-const { getAllCommentsForRecipe, createCommentForRecipe } = await import(
-  "../../controllers/commentsController.js"
-);
-
-const { deleteCommentById } = await import(
-  "../../controllers/commentsController.js"
-);
+const { getAllCommentsForRecipe, createCommentForRecipe, deleteCommentById } =
+  await import("../../controllers/commentsController.js");
 
 const mockRes = {
   status: mockStatus.mockReturnValue({ json: mockJson, send: mockSend }),
