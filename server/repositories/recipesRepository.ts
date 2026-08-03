@@ -101,7 +101,12 @@ export const getRecipesByCategory = async (
     LEFT JOIN recipes_categories ON recipes.id = recipes_categories.recipe_id
     LEFT JOIN categories ON recipes_categories.category_id = categories.id
     LEFT JOIN users ON recipes.user_id = users.id
-    WHERE categories.name = $1
+    WHERE recipes.id IN (
+      SELECT recipes_categories.recipe_id
+      FROM recipes_categories
+      JOIN categories ON recipes_categories.category_id = categories.id
+      WHERE categories.name = $1
+    )
     GROUP BY recipes.id, users.username, users.profile_image
     ORDER BY recipes.created_at DESC`,
     [categoryName],

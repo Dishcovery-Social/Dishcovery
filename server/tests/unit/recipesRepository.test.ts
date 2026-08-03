@@ -88,6 +88,36 @@ describe("getAllRecipes", () => {
     expect(mockQuery).toHaveBeenCalledWith(getAllRecipesQuery);
     expect(result).toEqual([]);
   });
+
+  it("returns all categories for a recipe that has more than one", async () => {
+    const mockRows: RecipeWithProfile[] = [
+      {
+        id: 1,
+        title: "Pancakes",
+        ingredients: [
+          { name: "Flour", quantity: 2, unit: "cups" },
+          { name: "Milk", quantity: 1.5, unit: "cups" },
+        ],
+        instructions: "Mix and cook on a griddle.",
+        image: "pancakes.jpg",
+        username: "chefuser",
+        profile_image: "chefuser.jpg",
+        category: ["Breakfast", "Quick"],
+        created_at: "2024-01-01T00:00:00.000Z",
+      },
+    ];
+
+    mockQuery.mockResolvedValue({ rows: mockRows });
+
+    const result = await getRecipesByCategory("Breakfast");
+
+    expect(mockQuery).toHaveBeenCalledWith(
+      expect.stringContaining("WHERE categories.name = $1"),
+      ["Breakfast"],
+    );
+    expect(result).toEqual(mockRows);
+    expect(result[0].category).toEqual(["Breakfast", "Quick"]);
+  });
 });
 
 const getRecipeByIdQuery = `SELECT
