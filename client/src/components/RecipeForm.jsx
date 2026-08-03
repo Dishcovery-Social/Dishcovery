@@ -13,11 +13,7 @@ const RecipeForm = ({
 }) => {
   const [pendingIngredients, setPendingIngredients] = useState([]);
   const [pendingCategories, setPendingCategories] = useState([]);
-  const [setIngredient] = useState({
-    ingredientName: "",
-    quantity: "",
-    unit: "",
-  });
+
   const [ingredientPopup, setIngredientPopup] = useState(false);
   const categoriesOptions = [
     { value: "sweet", label: "Sweet" },
@@ -53,11 +49,6 @@ const RecipeForm = ({
   const handleIngredientSubmit = (e) => {
     e.preventDefault();
 
-    setIngredient({
-      ingredientName: ingredientName,
-      quantity: quantity,
-      unit: unit,
-    });
     setPendingIngredients([
       ...pendingIngredients,
       {
