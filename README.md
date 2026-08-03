@@ -34,13 +34,13 @@ Backend: TypeScript, Express, Render Database
 
 The home page displays a feed of all community shared recipes pulling from the database. It serves as the primary read function where users can browse existing posts.
 
-<img src="./demo/recipe-feed.gif" title="PersonalDesk demo" width="600" alt="Video Walkthrough of PersonalDesk" />
+<img src="./demo/recipe-feed.gif" title="PersonalDesk demo" width="600" alt="Video Walkthrough of Dishcover recipe feed" />
 
-### Detailed Recipe View
+### Detailed Recipe View ✅
 
 Clicking on a recipe utilizes React Router dynamic routing to redirect the user to a dedicated details page. This page displays the full breakdown of ingredients, step by step preparation instructions, and the author profile link.
 
-[gif goes here]
+<img src="./demo/recipe-details.gif" title="PersonalDesk demo" width="600" alt="Video Walkthrough of Dishcovery recipe details" />
 
 ### Interactive Recipe Creation
 
@@ -72,4 +72,77 @@ Fulfills the custom feature requirement for a one to one database relationship b
 
 ## Installation Instructions
 
-[instructions go here]
+**Prerequisites:** Node.js >= 22.18.0, a PostgreSQL database, a GitHub OAuth app
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/Dishcovery-Social/Dishcovery.git
+   cd Dishcovery
+   ```
+
+2. **Install dependencies** (installs both client and server via npm workspaces)
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables**
+
+   Copy each example file and fill in the values:
+
+   ```bash
+   cp server/.env.example server/.env
+   cp client/.env.example client/.env
+   ```
+
+   **`server/.env`**
+
+   | Variable | Description |
+   |---|---|
+   | `CLIENT_URL` | URL of the client app (e.g. `http://localhost:5173`) |
+   | `SERVER_URL` | URL of this server (e.g. `http://localhost:3000`) |
+   | `PORT` | Port for the Express server (e.g. `3000`) |
+   | `NODE_ENV` | `development` or `production` |
+   | `PGDATABASE` | PostgreSQL database name |
+   | `PGHOST` | PostgreSQL host |
+   | `PGPASSWORD` | PostgreSQL password |
+   | `PGPORT` | PostgreSQL port (usually `5432`) |
+   | `PGUSER` | PostgreSQL username |
+   | `SESSION_SECRET` | Any long random string for signing sessions |
+   | `GITHUB_CLIENT_ID` | From your GitHub OAuth App |
+   | `GITHUB_CLIENT_SECRET` | From your GitHub OAuth App |
+
+   **`client/.env`**
+
+   | Variable | Description |
+   |---|---|
+   | `VITE_API_URL` | Full URL of the server, including port (e.g. `http://localhost:3000`) |
+
+   > **GitHub OAuth App:** Go to GitHub → Settings → Developer settings → OAuth Apps → New OAuth App. Set the homepage URL to your client URL and the callback URL to `{SERVER_URL}/auth/github/callback`.
+
+4. **Seed the database**
+
+   ```bash
+   npm run reset -w server
+   ```
+
+5. **Start the development servers**
+
+   ```bash
+   npm run dev
+   ```
+
+   The client runs at `http://localhost:5173` and the server at the port set in `server/.env`.
+
+## Troubleshooting
+
+**`npm install` fails or produces unexpected dependency errors**
+
+The `package-lock.json` may be corrupted or out of sync. Delete it and reinstall:
+
+```bash
+rm package-lock.json
+rm -rf node_modules
+npm install
+```
