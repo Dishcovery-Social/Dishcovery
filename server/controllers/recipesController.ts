@@ -75,10 +75,18 @@ const validateRecipeData = (
 };
 
 export const getAllRecipes = async (
-  _request: Request,
+  request: Request,
   response: Response,
 ): Promise<void> => {
-  const recipes = await RecipesRepository.getAllRecipes();
+  const category =
+    typeof request.query.category === "string"
+      ? request.query.category.trim()
+      : undefined;
+
+  const recipes = category
+    ? await RecipesRepository.getRecipesByCategory(category)
+    : await RecipesRepository.getAllRecipes();
+
   response.status(200).json(recipes);
 };
 

@@ -83,6 +83,37 @@ export const createRecipe = async (
   return recipe;
 };
 
+export const getRecipesByCategory = async (
+  categoryName: string,
+): Promise<RecipeWithProfile[]> => {
+  const results = await pool.query<RecipeWithProfile>(
+    `SELECT
+      recipes.id,
+      recipes.title,
+      recipes.ingredients,
+      recipes.instructions,
+      recipes.image,
+      recipes.created_at,
+      users.username,
+      users.profile_image,
+      COALESCE(array_agg(categories.name) FILTER (WHERE categories.name IS NOT NULL), '{}') AS category
+    FROM recipes
+    LEFT JOIN recipes_categories ON recipes.id = recipes_categories.recipe_id
+    LEFT JOIN categories ON recipes_categories.category_id = categories.id
+    LEFT JOIN users ON recipes.user_id = users.id
+    WHERE recipes.id IN (
+      SELECT recipes_categories.recipe_id
+      FROM recipes_categories
+      JOIN categories ON recipes_categories.category_id = categories.id
+      WHERE categories.name = $1
+    )
+    GROUP BY recipes.id, users.username, users.profile_image
+    ORDER BY recipes.created_at DESC`,
+    [categoryName],
+  );
+  return results.rows;
+};
+
 export const patchRecipeById = async (
   id: number,
   recipe: Partial<Recipe>,
