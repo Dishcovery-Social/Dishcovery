@@ -35,7 +35,6 @@ function App() {
         <Route path="/recipes/:id" element={<RecipeDetailsPage />} />
         <Route element={<ProtectedRoute />}>
           {/* Add the protected routes in here */}
-          <Route path="/recipes/create" element={<CreateRecipe />} />
         </Route>
       </Route>
     </Routes>
