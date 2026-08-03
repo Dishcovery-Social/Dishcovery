@@ -1,9 +1,8 @@
 import { afterEach, describe, expect, it, jest } from "@jest/globals";
 import type { Request, Response } from "express";
 
-const mockGetAllRecipes = jest.fn<(...args: unknown[]) => Promise<unknown>>();
-const mockGetRecipesByCategory =
-  jest.fn<(...args: unknown[]) => Promise<unknown>>();
+const mockGetAllRecipes = jest.fn();
+const mockGetRecipesByCategory = jest.fn();
 
 jest.unstable_mockModule("../../repositories/recipesRepository.js", () => ({
   getAllRecipes: mockGetAllRecipes,
@@ -31,9 +30,10 @@ afterEach(() => {
   jest.clearAllMocks();
 });
 
-describe("getAllRecipes (category query)", () => {
-  it("calls getRecipesByCategory when query param is provided", async () => {
+describe("getAllRecipes", () => {
+  it("calls getRecipesByCategory when category query param is provided", async () => {
     const mockRecipes = [{ id: 1, title: "Pancakes", category: ["Breakfast"] }];
+
     const mockRequest = {
       query: { category: "Breakfast" },
     } as unknown as Request;
@@ -62,11 +62,12 @@ describe("getAllRecipes (category query)", () => {
   });
 
   it("calls getAllRecipes when no category is provided", async () => {
+    const mockRecipes = [{ id: 2, title: "Waffles", category: [] }];
+
     const mockRequest = {
       query: {},
     } as unknown as Request;
 
-    const mockRecipes = [{ id: 2, title: "Waffles", category: [] }];
     mockGetAllRecipes.mockResolvedValue(mockRecipes);
 
     await getAllRecipes(mockRequest, mockResponse);
@@ -77,11 +78,12 @@ describe("getAllRecipes (category query)", () => {
   });
 
   it("treats blank category as no filter and calls getAllRecipes", async () => {
+    const mockRecipes = [{ id: 3, title: "Toast", category: [] }];
+
     const mockRequest = {
       query: { category: "   " },
     } as unknown as Request;
 
-    const mockRecipes = [{ id: 3, title: "Toast", category: [] }];
     mockGetAllRecipes.mockResolvedValue(mockRecipes);
 
     await getAllRecipes(mockRequest, mockResponse);

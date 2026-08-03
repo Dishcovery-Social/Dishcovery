@@ -20,4 +20,4 @@ export interface Ingredient {
   unit: string;
 }
 
-export type NewRecipe = Omit<Recipe, "id" | "category" | "created_at">;
+export type NewRecipe = Omit<Recipe, "id" | "created_at">;

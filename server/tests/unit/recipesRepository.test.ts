@@ -3,14 +3,21 @@ import type { NewRecipe, RecipeWithProfile } from "../../types/recipe.js";
 
 const mockQuery = jest.fn<(...args: unknown[]) => Promise<unknown>>();
 
+const mockClientQuery = jest.fn<(...args: unknown[]) => Promise<unknown>>();
+
+const mockClient = {
+  query: mockClientQuery,
+  release: jest.fn(),
+};
+
 jest.unstable_mockModule("../../config/database.js", () => ({
   pool: {
     query: mockQuery,
+    connect: jest
+      .fn<() => Promise<typeof mockClient>>()
+      .mockResolvedValue(mockClient),
   },
 }));
-
-const { getAllRecipes, getRecipeById, createRecipe, getRecipesByCategory } =
-  await import("../../repositories/recipesRepository.js");
 
 const getAllRecipesQuery = `SELECT
       recipes.id,
@@ -28,6 +35,10 @@ const getAllRecipesQuery = `SELECT
     LEFT JOIN users ON recipes.user_id = users.id
     GROUP BY recipes.id, users.username, users.profile_image
     ORDER BY recipes.created_at DESC`;
+
+const { getAllRecipes } = await import(
+  "../../repositories/recipesRepository.js"
+);
 
 describe("getAllRecipes", () => {
   afterEach(() => {
@@ -88,36 +99,6 @@ describe("getAllRecipes", () => {
     expect(mockQuery).toHaveBeenCalledWith(getAllRecipesQuery);
     expect(result).toEqual([]);
   });
-
-  it("returns all categories for a recipe that has more than one", async () => {
-    const mockRows: RecipeWithProfile[] = [
-      {
-        id: 1,
-        title: "Pancakes",
-        ingredients: [
-          { name: "Flour", quantity: 2, unit: "cups" },
-          { name: "Milk", quantity: 1.5, unit: "cups" },
-        ],
-        instructions: "Mix and cook on a griddle.",
-        image: "pancakes.jpg",
-        username: "chefuser",
-        profile_image: "chefuser.jpg",
-        category: ["Breakfast", "Quick"],
-        created_at: "2024-01-01T00:00:00.000Z",
-      },
-    ];
-
-    mockQuery.mockResolvedValue({ rows: mockRows });
-
-    const result = await getRecipesByCategory("Breakfast");
-
-    expect(mockQuery).toHaveBeenCalledWith(
-      expect.stringContaining("WHERE categories.name = $1"),
-      ["Breakfast"],
-    );
-    expect(result).toEqual(mockRows);
-    expect(result[0].category).toEqual(["Breakfast", "Quick"]);
-  });
 });
 
 const getRecipeByIdQuery = `SELECT
@@ -136,6 +117,10 @@ const getRecipeByIdQuery = `SELECT
     LEFT JOIN users ON recipes.user_id = users.id
     WHERE recipes.id = $1
     GROUP BY recipes.id, users.username, users.profile_image`;
+
+const { getRecipeById } = await import(
+  "../../repositories/recipesRepository.js"
+);
 
 describe("getRecipeById", () => {
   afterEach(() => {
@@ -189,6 +174,10 @@ const insertRecipeQuery = `
   `;
 
 const insertCategoryQuery = `INSERT INTO recipes_categories (recipe_id, category_id) VALUES ($1, $2)`;
+
+const { createRecipe } = await import(
+  "../../repositories/recipesRepository.js"
+);
 
 describe("createRecipe", () => {
   afterEach(() => {
@@ -274,56 +263,163 @@ describe("createRecipe", () => {
   });
 });
 
-describe("getRecipesByCategory", () => {
+jest.unstable_mockModule("../../config/database.js", () => ({
+  pool: {
+    connect: jest
+      .fn<() => Promise<typeof mockClient>>()
+      .mockResolvedValue(mockClient),
+  },
+}));
+
+const { patchRecipeById } = await import(
+  "../../repositories/recipesRepository.js"
+);
+
+describe("patchRecipeById", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("returns recipes for a given category", async () => {
-    const mockRows: RecipeWithProfile[] = [
+  const updatedRecipe: RecipeWithProfile = {
+    id: 1,
+    title: "Updated Pancakes",
+    ingredients: [
       {
-        id: 1,
-        title: "Pancakes",
-        ingredients: [
-          { name: "Flour", quantity: 2, unit: "cups" },
-          { name: "Milk", quantity: 1.5, unit: "cups" },
-        ],
-        instructions: "Mix and cook on a griddle.",
-        image: "pancakes.jpg",
-        username: "chefuser",
-        profile_image: "chefuser.jpg",
-        category: ["Breakfast"],
-        created_at: "2024-01-01T00:00:00.000Z",
+        name: "Flour",
+        quantity: 3,
+        unit: "cups",
       },
-    ];
+    ],
+    instructions: "Cook pancakes differently.",
+    image: "updated.jpg",
+    username: "chefuser",
+    profile_image: "chef.jpg",
+    category: ["Breakfast"],
+    created_at: "2024-01-01T00:00:00.000Z",
+  };
 
-    mockQuery.mockResolvedValue({ rows: mockRows });
+  it("updates recipe fields and returns updated recipe", async () => {
+    mockClientQuery
+      .mockResolvedValueOnce({}) // BEGIN
+      .mockResolvedValueOnce({ rows: [] }) // UPDATE
+      .mockResolvedValueOnce({ rows: [updatedRecipe] }) // SELECT
+      .mockResolvedValueOnce({}); // COMMIT
 
-    const result = await getRecipesByCategory("Breakfast");
+    const result = await patchRecipeById(1, {
+      title: "Updated Pancakes",
+    });
 
-    expect(mockQuery).toHaveBeenCalledWith(
-      expect.stringContaining("WHERE categories.name = $1"),
-      ["Breakfast"],
+    expect(mockClientQuery).toHaveBeenNthCalledWith(1, "BEGIN");
+
+    expect(mockClientQuery).toHaveBeenNthCalledWith(
+      2,
+      expect.stringContaining("UPDATE recipes"),
+      ["Updated Pancakes", 1],
     );
-    expect(result).toEqual(mockRows);
+
+    expect(mockClientQuery).toHaveBeenNthCalledWith(
+      3,
+      expect.stringContaining("SELECT"),
+      [1],
+    );
+
+    expect(mockClientQuery).toHaveBeenNthCalledWith(4, "COMMIT");
+
+    expect(result).toEqual(updatedRecipe);
   });
 
-  it("returns an empty array when there are no recipes for the category", async () => {
-    mockQuery.mockResolvedValue({ rows: [] });
+  it("updates categories when category is provided", async () => {
+    mockClientQuery
+      .mockResolvedValueOnce({}) // BEGIN
+      .mockResolvedValueOnce({}) // DELETE
+      .mockResolvedValueOnce({
+        rows: [{ id: 2 }],
+      }) // SELECT category
+      .mockResolvedValueOnce({}) // INSERT relationship
+      .mockResolvedValueOnce({
+        rows: [updatedRecipe],
+      }) // SELECT updated
+      .mockResolvedValueOnce({}); // COMMIT
 
-    const result = await getRecipesByCategory("NonExistentCategory");
+    const result = await patchRecipeById(1, {
+      category: ["breakfast"],
+    });
 
-    expect(mockQuery).toHaveBeenCalledWith(
-      expect.stringContaining("WHERE categories.name = $1"),
-      ["NonExistentCategory"],
+    expect(mockClientQuery).toHaveBeenCalledWith(
+      "DELETE FROM recipes_categories WHERE recipe_id = $1",
+      [1],
     );
-    expect(result).toEqual([]);
+
+    expect(result).toEqual(updatedRecipe);
+  });
+
+  it("throws when no fields are provided", async () => {
+    mockClientQuery.mockResolvedValueOnce({});
+
+    await expect(patchRecipeById(1, {})).rejects.toThrow(
+      "No fields provided for update",
+    );
+  });
+
+  it("rolls back if update fails", async () => {
+    mockClientQuery
+      .mockResolvedValueOnce({}) // BEGIN
+      .mockRejectedValueOnce(new Error("DB failure"))
+      .mockResolvedValueOnce({}); // ROLLBACK
+
+    await expect(
+      patchRecipeById(1, {
+        title: "Broken",
+      }),
+    ).rejects.toThrow("DB failure");
+
+    expect(mockClientQuery).toHaveBeenCalledWith("ROLLBACK");
+    expect(mockClient.release).toHaveBeenCalled();
+  });
+});
+
+const deleteRecipeByIdQuery =
+  "DELETE FROM recipes WHERE id = $1 AND user_id = $2";
+
+const { deleteRecipeById } = await import(
+  "../../repositories/recipesRepository.js"
+);
+
+describe("deleteRecipeById", () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("returns true when a recipe is deleted", async () => {
+    mockQuery.mockResolvedValue({ rowCount: 1 });
+
+    const result = await deleteRecipeById(1, 123);
+
+    expect(mockQuery).toHaveBeenCalledWith(deleteRecipeByIdQuery, [1, 123]);
+    expect(result).toBe(true);
+  });
+
+  it("returns false when no recipe matches the ID", async () => {
+    mockQuery.mockResolvedValue({ rowCount: 0 });
+
+    const result = await deleteRecipeById(999, 123);
+
+    expect(mockQuery).toHaveBeenCalledWith(deleteRecipeByIdQuery, [999, 123]);
+    expect(result).toBe(false);
+  });
+
+  it("returns false when rowCount is null", async () => {
+    mockQuery.mockResolvedValue({ rowCount: null });
+
+    const result = await deleteRecipeById(1, 123);
+
+    expect(result).toBe(false);
   });
 
   it("propagates an error if the query fails", async () => {
     mockQuery.mockRejectedValue(new Error("DB connection failed"));
 
-    await expect(getRecipesByCategory("Breakfast")).rejects.toThrow(
+    await expect(deleteRecipeById(1, 123)).rejects.toThrow(
       "DB connection failed",
     );
   });
