@@ -60,3 +60,16 @@ export const createCommentForRecipe = async (
 
   return createdComment;
 };
+
+export const deleteCommentById = async (
+  commentId: number,
+  userId: number,
+): Promise<void> => {
+  const deleted = await pool.query(
+    `DELETE FROM comments WHERE id = $1 AND user_id = $2`,
+    [commentId, userId],
+  );
+  if (deleted.rowCount === 0) {
+    throw new Error("Comment not deleted.");
+  }
+};

@@ -8,24 +8,29 @@ const mockCreateCommentForRecipe =
   jest.fn<
     (recipeId: number, userId: number, body: string) => Promise<unknown>
   >();
+const mockGetCommentById = jest.fn<(commentId: number) => Promise<unknown>>();
+const mockDeleteCommentById =
+  jest.fn<(commentId: number, userId: number) => Promise<void>>();
 const mockJson = jest.fn();
 const mockStatus = jest.fn();
+const mockSend = jest.fn();
 
 jest.unstable_mockModule("../../repositories/commentsRepository.js", () => ({
   getAllCommentsForRecipe: mockGetAllCommentsForRecipe,
   createCommentForRecipe: mockCreateCommentForRecipe,
+  getCommentById: mockGetCommentById,
+  deleteCommentById: mockDeleteCommentById,
 }));
 
 jest.unstable_mockModule("../../repositories/recipesRepository.js", () => ({
   getRecipeById: mockGetRecipeById,
 }));
 
-const { getAllCommentsForRecipe, createCommentForRecipe } = await import(
-  "../../controllers/commentsController.js"
-);
+const { getAllCommentsForRecipe, createCommentForRecipe, deleteCommentById } =
+  await import("../../controllers/commentsController.js");
 
 const mockRes = {
-  status: mockStatus.mockReturnValue({ json: mockJson }),
+  status: mockStatus.mockReturnValue({ json: mockJson, send: mockSend }),
 } as unknown as Response;
 
 const buildRequest = (overrides: Partial<Request> = {}) =>
@@ -37,7 +42,7 @@ const buildRequest = (overrides: Partial<Request> = {}) =>
 
 afterEach(() => {
   jest.clearAllMocks();
-  mockStatus.mockReturnValue({ json: mockJson });
+  mockStatus.mockReturnValue({ json: mockJson, send: mockSend });
 });
 
 describe("getAllCommentsForRecipe", () => {
@@ -115,5 +120,90 @@ describe("createCommentForRecipe", () => {
     expect(mockCreateCommentForRecipe).toHaveBeenCalledWith(1, 7, "Love it!");
     expect(mockStatus).toHaveBeenCalledWith(201);
     expect(mockJson).toHaveBeenCalledWith(createdComment);
+  });
+});
+
+describe("deleteCommentById", () => {
+  it("returns 400 when the comment ID is not a number", async () => {
+    const req = buildRequest({ params: { commentId: "abc" } });
+
+    await deleteCommentById(req, mockRes);
+
+    expect(mockStatus).toHaveBeenCalledWith(400);
+    expect(mockJson).toHaveBeenCalledWith({
+      error: "Comment ID must be a number",
+    });
+    expect(mockGetCommentById).not.toHaveBeenCalled();
+    expect(mockDeleteCommentById).not.toHaveBeenCalled();
+  });
+
+  it("returns 400 when the comment ID is not positive", async () => {
+    const req = buildRequest({ params: { commentId: "0" } });
+
+    await deleteCommentById(req, mockRes);
+
+    expect(mockStatus).toHaveBeenCalledWith(400);
+    expect(mockJson).toHaveBeenCalledWith({
+      error: "Comment ID must be a positive number",
+    });
+    expect(mockGetCommentById).not.toHaveBeenCalled();
+    expect(mockDeleteCommentById).not.toHaveBeenCalled();
+  });
+
+  it("returns 401 when the user is not authenticated", async () => {
+    const req = buildRequest({
+      params: { commentId: "1" },
+      user: undefined,
+    });
+
+    await deleteCommentById(req, mockRes);
+
+    expect(mockStatus).toHaveBeenCalledWith(401);
+    expect(mockJson).toHaveBeenCalledWith({ error: "Unauthorized" });
+    expect(mockGetCommentById).not.toHaveBeenCalled();
+    expect(mockDeleteCommentById).not.toHaveBeenCalled();
+  });
+
+  it("returns 404 when the comment does not exist", async () => {
+    mockGetCommentById.mockResolvedValue(undefined);
+    const req = buildRequest({ params: { commentId: "1" } });
+
+    await deleteCommentById(req, mockRes);
+
+    expect(mockGetCommentById).toHaveBeenCalledWith(1);
+    expect(mockStatus).toHaveBeenCalledWith(404);
+    expect(mockJson).toHaveBeenCalledWith({ error: "Comment not found: 1" });
+    expect(mockDeleteCommentById).not.toHaveBeenCalled();
+  });
+
+  it("returns 403 when a different user tries to delete the comment", async () => {
+    mockGetCommentById.mockResolvedValue({ username: "other-user" });
+    const req = buildRequest({
+      params: { commentId: "1" },
+      user: { id: 1, username: "owner" },
+    });
+
+    await deleteCommentById(req, mockRes);
+
+    expect(mockGetCommentById).toHaveBeenCalledWith(1);
+    expect(mockStatus).toHaveBeenCalledWith(403);
+    expect(mockJson).toHaveBeenCalledWith({ error: "Forbidden" });
+    expect(mockDeleteCommentById).not.toHaveBeenCalled();
+  });
+
+  it("returns 204 after deleting the comment owned by the user", async () => {
+    mockGetCommentById.mockResolvedValue({ username: "owner" });
+    mockDeleteCommentById.mockResolvedValue();
+    const req = buildRequest({
+      params: { commentId: "1" },
+      user: { id: 7, username: "owner" },
+    });
+
+    await deleteCommentById(req, mockRes);
+
+    expect(mockGetCommentById).toHaveBeenCalledWith(1);
+    expect(mockDeleteCommentById).toHaveBeenCalledWith(1, 7);
+    expect(mockStatus).toHaveBeenCalledWith(204);
+    expect(mockSend).toHaveBeenCalled();
   });
 });

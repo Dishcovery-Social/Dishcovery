@@ -9,6 +9,9 @@ const mockCreateCommentForRecipe =
   jest.fn<
     (recipeId: number, userId: number, body: string) => Promise<unknown>
   >();
+const mockGetCommentById = jest.fn<(commentId: number) => Promise<unknown>>();
+const mockDeleteCommentById =
+  jest.fn<(commentId: number, userId: number) => Promise<void>>();
 
 const mockAuthenticate = jest.fn(
   (req: Request, _res: Response, next: NextFunction) => {
@@ -28,6 +31,8 @@ jest.unstable_mockModule("../../repositories/recipesRepository.js", () => ({
 jest.unstable_mockModule("../../repositories/commentsRepository.js", () => ({
   getAllCommentsForRecipe: mockGetAllCommentsForRecipe,
   createCommentForRecipe: mockCreateCommentForRecipe,
+  getCommentById: mockGetCommentById,
+  deleteCommentById: mockDeleteCommentById,
 }));
 
 const { default: commentsRouter } = await import("../../routes/comments.js");
@@ -43,11 +48,17 @@ const mockComment = {
   profile_image: "testuser.jpg",
 };
 
-describe("GET /recipes/:recipeId/comments", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+afterEach(() => {
+  jest.clearAllMocks();
+  mockAuthenticate.mockImplementation(
+    (req: Request, _res: Response, next: NextFunction) => {
+      req.user = { id: 1, username: "testuser" } as Request["user"];
+      next();
+    },
+  );
+});
 
+describe("GET /recipes/:recipeId/comments", () => {
   it("returns 200 with all comments for recipe 1", async () => {
     mockGetRecipeById.mockResolvedValue({ username: "testuser" });
     mockGetAllCommentsForRecipe.mockResolvedValue([mockComment]);
@@ -108,10 +119,6 @@ describe("GET /recipes/:recipeId/comments", () => {
 });
 
 describe("POST /recipes/:recipeId/comments", () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it("returns 201 with the created comment in the profile-enriched shape", async () => {
     mockGetRecipeById.mockResolvedValue({ username: "testuser" });
     mockCreateCommentForRecipe.mockResolvedValue(mockComment);
@@ -146,5 +153,71 @@ describe("POST /recipes/:recipeId/comments", () => {
 
     expect(response.status).toBe(401);
     expect(response.body).toEqual({ error: "Unauthorized" });
+  });
+});
+
+describe("DELETE /recipes/:recipeId/comments/:commentId", () => {
+  it("returns 204 when the authenticated user deletes their comment", async () => {
+    mockGetCommentById.mockResolvedValue({ username: "testuser" });
+    mockDeleteCommentById.mockResolvedValue();
+
+    const response = await request(app).delete("/recipes/1/comments/1");
+
+    expect(response.status).toBe(204);
+    expect(mockGetCommentById).toHaveBeenCalledWith(1);
+    expect(mockDeleteCommentById).toHaveBeenCalledWith(1, 1);
+  });
+
+  it("returns 400 when the comment ID is not a number", async () => {
+    const response = await request(app).delete("/recipes/1/comments/abc");
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ error: "Comment ID must be a number" });
+    expect(mockGetCommentById).not.toHaveBeenCalled();
+    expect(mockDeleteCommentById).not.toHaveBeenCalled();
+  });
+
+  it("returns 400 when the comment ID is not positive", async () => {
+    const response = await request(app).delete("/recipes/1/comments/0");
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({
+      error: "Comment ID must be a positive number",
+    });
+    expect(mockGetCommentById).not.toHaveBeenCalled();
+    expect(mockDeleteCommentById).not.toHaveBeenCalled();
+  });
+
+  it("returns 401 when the user is not authenticated", async () => {
+    mockAuthenticate.mockImplementation((_req: Request, res: Response) => {
+      res.status(401).json({ error: "Unauthorized" });
+    });
+
+    const response = await request(app).delete("/recipes/1/comments/1");
+
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({ error: "Unauthorized" });
+    expect(mockGetCommentById).not.toHaveBeenCalled();
+    expect(mockDeleteCommentById).not.toHaveBeenCalled();
+  });
+
+  it("returns 404 when the comment does not exist", async () => {
+    mockGetCommentById.mockResolvedValue(undefined);
+
+    const response = await request(app).delete("/recipes/1/comments/1");
+
+    expect(response.status).toBe(404);
+    expect(response.body).toEqual({ error: "Comment not found: 1" });
+    expect(mockDeleteCommentById).not.toHaveBeenCalled();
+  });
+
+  it("returns 403 when another user tries to delete the comment", async () => {
+    mockGetCommentById.mockResolvedValue({ username: "other-user" });
+
+    const response = await request(app).delete("/recipes/1/comments/1");
+
+    expect(response.status).toBe(403);
+    expect(response.body).toEqual({ error: "Forbidden" });
+    expect(mockDeleteCommentById).not.toHaveBeenCalled();
   });
 });

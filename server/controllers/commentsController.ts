@@ -74,3 +74,47 @@ export const createCommentForRecipe = async (
 
   response.status(201).json(comment);
 };
+
+export const deleteCommentById = async (
+  request: Request,
+  response: Response,
+): Promise<void> => {
+  const commentId = parseInt(request.params.commentId as string, 10);
+  if (Number.isNaN(commentId)) {
+    console.log(`Invalid comment ID: ${request.params.commentId}`);
+    response.status(400).json({ error: "Comment ID must be a number" });
+    return;
+  }
+
+  if (commentId <= 0) {
+    console.log(`Invalid comment ID: ${request.params.commentId}`);
+    response
+      .status(400)
+      .json({ error: "Comment ID must be a positive number" });
+    return;
+  }
+
+  if (!request.user?.username) {
+    response.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  const comment = await CommentsRepository.getCommentById(commentId);
+
+  if (!comment) {
+    console.log(`Comment not found: ${commentId}`);
+    response.status(404).json({ error: `Comment not found: ${commentId}` });
+    return;
+  }
+
+  if (comment.username !== request.user.username) {
+    console.log(
+      `User ${request.user.username} is not authorized to delete comment ${commentId}`,
+    );
+    response.status(403).json({ error: "Forbidden" });
+    return;
+  }
+
+  await CommentsRepository.deleteCommentById(commentId, request.user.id);
+  response.status(204).send();
+};
