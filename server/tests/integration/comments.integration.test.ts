@@ -30,7 +30,7 @@ const { default: commentsRouter } = await import("../../routes/comments.js");
 const { buildTestApp } = await import("../testServer.js");
 const app = buildTestApp("/recipes/:recipeId/comments", commentsRouter);
 
-const mockComment: CommentWithProfile = {
+const mockComment = {
   id: 1,
   body: "Great recipe!",
   recipe_id: 1,
@@ -39,7 +39,7 @@ const mockComment: CommentWithProfile = {
   profile_image: "testuser.jpg",
 };
 
-describe("GET /recipe/1/comments", () => {
+describe("GET /recipes/1/comments", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });

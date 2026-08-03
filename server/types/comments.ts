@@ -3,7 +3,7 @@ export interface Comment {
   body: string;
   recipe_id: number;
   user_id: number;
-  created_at: string;
+  created_at: Date;
 }
 
 export type CommentWithProfile = Omit<Comment, "user_id"> & {
