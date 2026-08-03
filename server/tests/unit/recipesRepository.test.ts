@@ -195,7 +195,7 @@ describe("getRecipesByCategory", () => {
     jest.clearAllMocks();
   });
 
-  it("returns recipes for a category using options", async () => {
+  it("returns recipes for a category", async () => {
     const mockRows: RecipeWithProfile[] = [
       {
         id: 1,
