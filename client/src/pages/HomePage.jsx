@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 import CreateIcon from "../assets/Create-Post-Button.svg";
 import RecipeCard from "../components/RecipeCard.jsx";
 import { getRecipes } from "../services/RecipesAPI.js";
@@ -7,6 +8,7 @@ export default function HomePage() {
   const [recipes, setRecipes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -44,7 +46,11 @@ export default function HomePage() {
           />
         ))
       )}
-      <button type="button" className="fixed right-8 bottom-8 h-20 z-10">
+      <button
+        type="button"
+        onClick={() => navigate("/recipes/create")}
+        className="fixed right-8 bottom-8 h-20 z-10"
+      >
         <img src={CreateIcon} alt="Create post" className="h-full" />
       </button>
     </>
