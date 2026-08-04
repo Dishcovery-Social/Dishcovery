@@ -2,19 +2,25 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import CreateIcon from "../assets/Create-Post-Button.svg";
 import RecipeCard from "../components/RecipeCard.jsx";
+import { getCategories } from "../services/CategoriesAPI.js";
 import { getRecipes } from "../services/RecipesAPI.js";
 
 export default function HomePage() {
   const [recipes, setRecipes] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchRecipe = async () => {
+    const fetchRecipesAndCategories = async () => {
       try {
-        const recipes = await getRecipes();
+        const [recipes, categories] = await Promise.all([
+          getRecipes(),
+          getCategories(),
+        ]);
         setRecipes(recipes);
+        setCategories(categories);
       } catch (error) {
         setError(error);
       } finally {
@@ -22,7 +28,7 @@ export default function HomePage() {
       }
     };
 
-    fetchRecipe();
+    fetchRecipesAndCategories();
   }, []);
 
   return (
