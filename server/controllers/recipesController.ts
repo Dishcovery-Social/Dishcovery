@@ -291,6 +291,7 @@ export const deleteRecipe = async (
 ): Promise<void> => {
   const { id } = request.params;
   const recipeId = parseInt(id, 10);
+  console.log("In delete controller");
 
   if (Number.isNaN(recipeId)) {
     response.status(400).json({ error: "Invalid recipe ID" });

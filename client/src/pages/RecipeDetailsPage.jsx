@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { getRecipeById } from "../services/RecipesAPI.js";
+import { useNavigate, useParams } from "react-router";
+import { deleteRecipeById, getRecipeById } from "../services/RecipesAPI.js";
 
 export default function RecipeDetailsPage() {
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecipe = async () => {
@@ -45,15 +46,15 @@ export default function RecipeDetailsPage() {
                 className="w-full h-64 object-cover"
                 alt={`${data.title} cover`}
               />
-              <div className="flex flex-col gap-2 px-6">
+              <div className="flex flex-col gap-2 px-6 text-center">
                 <p className="ml-4 text-2xl font-bold">{data.title}</p>
-                <p className="line-clamp-5 leading-tight">
+                <div className="max-w-3/4 min-w-3/5  min-h-3/4 resize-y">
                   {data.instructions}
-                </p>
+                </div>
               </div>
               <div className="flex flex-col m-auto">
                 <p className="font-heading font-medium text-center text-lg m-2">
-                  ingredients
+                  Ingredients:
                 </p>
                 <div>
                   <ul className="text-center">
@@ -63,6 +64,27 @@ export default function RecipeDetailsPage() {
                       </li>
                     ))}
                   </ul>
+                </div>
+                <div className="flex justify-center gap-4 w-full mt-2.5">
+                  <button
+                    type="button"
+                    className="bg-primary text-[#4b2e1e] m-2 cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
+                    onClick={() => {
+                      deleteRecipeById(id);
+                      navigate("/");
+                    }}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    className="bg-accent text-[#4b2e1e] m-2 cursor-pointer px-7 py-2.5 rounded-[20px] border-[none]"
+                    onClick={() => {
+                      navigate(`/recipes/${id}/edit`);
+                    }}
+                  >
+                    Edit
+                  </button>
                 </div>
               </div>
             </div>
