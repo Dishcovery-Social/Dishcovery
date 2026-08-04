@@ -6,7 +6,7 @@ import { getCategories } from "../services/CategoriesAPI.js";
 import { getRecipes } from "../services/RecipesAPI.js";
 
 export default function HomePage() {
-  const [recipes, setRecipes] = useState(null);
+  const [recipes, setRecipes] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
