@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import CreateIcon from "../assets/Create-Post-Button.svg";
 import RecipeCard from "../components/RecipeCard.jsx";
@@ -11,13 +11,14 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const isFirstRender = useRef(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecipesAndCategories = async () => {
       try {
         const [recipes, categories] = await Promise.all([
-          getRecipes(),
+          getRecipes(null),
           getCategories(),
         ]);
         setRecipes(recipes);
@@ -31,6 +32,26 @@ export default function HomePage() {
 
     fetchRecipesAndCategories();
   }, []);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const fetchFilteredRecipes = async () => {
+      try {
+        setLoading(true);
+        const recipes = await getRecipes(selectedCategory);
+        setRecipes(recipes);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFilteredRecipes();
+  }, [selectedCategory]);
 
   return (
     <>
