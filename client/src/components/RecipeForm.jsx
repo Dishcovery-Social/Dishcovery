@@ -10,9 +10,14 @@ const RecipeForm = ({
   setIngredients,
   setImage,
   setCategories,
+  title,
+  instructions,
+  image,
+  ingredients,
+  categories,
 }) => {
-  const [pendingIngredients, setPendingIngredients] = useState([]);
-  const [pendingCategories, setPendingCategories] = useState([]);
+  const [pendingIngredients, setPendingIngredients] = useState(ingredients);
+  const [pendingCategories, setPendingCategories] = useState(categories);
 
   const [ingredientPopup, setIngredientPopup] = useState(false);
   const categoriesOptions = [
@@ -37,13 +42,13 @@ const RecipeForm = ({
     { value: "gluten-free", label: "Gluten-free" },
   ];
 
-  const [ingredientName, setIngredientName] = useState("");
+  const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [unit, setUnit] = useState("");
 
-  const [recipeTitle, setRecipeTitle] = useState("");
-  const [recipeInstructions, setRecipeInstructions] = useState("");
-  const [recipeImage, setRecipeImage] = useState("");
+  const [recipeTitle, setRecipeTitle] = useState(title);
+  const [recipeInstructions, setRecipeInstructions] = useState(instructions);
+  const [recipeImage, setRecipeImage] = useState(image);
   const navigate = useNavigate();
 
   const handleIngredientSubmit = (e) => {
@@ -52,7 +57,7 @@ const RecipeForm = ({
     setPendingIngredients([
       ...pendingIngredients,
       {
-        ingredientName: ingredientName,
+        name: name,
         quantity: quantity,
         unit: unit,
       },
@@ -91,7 +96,7 @@ const RecipeForm = ({
             className="text-center rounded-sm bg-primary placeholder-ink w-3/4 min-h-8 p-1 resize-none overflow-hidden"
             type="text"
             id="recipeTitle"
-            placeholder="Enter the recipe title"
+            placeholder="Enter recipe title"
             value={recipeTitle}
             onChange={(e) => setRecipeTitle(e.target.value)}
           />
@@ -103,12 +108,13 @@ const RecipeForm = ({
           <input
             type="file"
             className="file:w-1/2 file:h-40"
-            onChange={(e) =>
+            onChange={() =>
               setRecipeImage(
                 "https://www.eatingwell.com/thmb/m5xUzIOmhWSoXZnY-oZcO9SdArQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/article_291139_the-top-10-healthiest-foods-for-kids_-02-4b745e57928c4786a61b47d8ba920058.jpg",
               )
             }
           />
+          {recipeImage && <img src={recipeImage} alt="recipe dish" />}
         </div>
 
         <button
@@ -133,8 +139,8 @@ const RecipeForm = ({
                   id="ingredientName"
                   type="text"
                   placeholder="flour"
-                  value={ingredientName}
-                  onChange={(e) => setIngredientName(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div className="flex flex-col items-center w-full gap-1.5">
@@ -188,18 +194,27 @@ const RecipeForm = ({
             </fieldset>
           </div>
         )}
-        <div className="w-[85%] text-center">
+        <div className="w-[85%] text-center rounded-sm bg-primary placeholder-ink  max-h-60 overflow-y-auto">
           {pendingIngredients.map((item) => (
             <div
-              className="text-[0.85rem] mb-1"
-              key={item.ingredientName + item.quantity}
+              className="text-[0.85rem] mb-1 mb-2"
+              key={item.name + item.quantity + item.unit}
             >
-              <p className="ingredientName">
-                Ingredient Name: {item.ingredientName}
-              </p>
+              <p className="ingredientName">Ingredient Name: {item.name}</p>
               <p className="quantityAndUnit">
                 Quantity: {item.quantity} {item.unit}
               </p>
+              <button
+                type="button"
+                className="text-red-500 text-lg"
+                onClick={() =>
+                  setPendingIngredients(
+                    pendingIngredients.filter((i) => i.name !== item.name),
+                  )
+                }
+              >
+                x
+              </button>
             </div>
           ))}
         </div>
@@ -219,9 +234,11 @@ const RecipeForm = ({
           <p className="m-2">Select recipe categories:</p>
           <Select
             options={categoriesOptions}
-            value={pendingCategories}
+            value={categoriesOptions.filter((option) =>
+              pendingCategories.includes(option.value),
+            )}
             onChange={(e) => {
-              setPendingCategories(e);
+              setPendingCategories(e ? e.map((option) => option.value) : []);
             }}
             isMulti={true}
             unstyled
