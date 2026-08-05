@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import CommentsSection from "../components/CommentsSection.jsx";
 import { getRecipeById } from "../services/RecipesAPI.js";
 
 export default function RecipeDetailsPage() {
@@ -67,11 +68,7 @@ export default function RecipeDetailsPage() {
               </div>
             </div>
           </div>
-          <div className="w-full max-w-md bg-primary">
-            <p className="text-secondary text-center font-heading text-lg font-semibold p-1">
-              Comments
-            </p>
-          </div>
+          <CommentsSection recipeId={id} />
         </>
       )}
     </>
