@@ -34,13 +34,13 @@ Backend: TypeScript, Express, Render Database
 
 The home page displays a feed of all community shared recipes pulling from the database. It serves as the primary read function where users can browse existing posts.
 
-<img src="./demo/recipe-feed.gif" title="PersonalDesk demo" width="600" alt="Video Walkthrough of Dishcover recipe feed" />
+<img src="./demo/recipe-feed.gif" title="Recipe Feed demo" width="600" alt="Video Walkthrough of Dishcover recipe feed" />
 
 ### Detailed Recipe View ✅
 
 Clicking on a recipe utilizes React Router dynamic routing to redirect the user to a dedicated details page. This page displays the full breakdown of ingredients, step by step preparation instructions, and the author profile link.
 
-<img src="./demo/recipe-details.gif" title="PersonalDesk demo" width="600" alt="Video Walkthrough of Dishcovery recipe details" />
+<img src="./demo/recipe-details.gif" title="Recipe Details demo" width="600" alt="Video Walkthrough of Dishcovery recipe details" />
 
 ### Interactive Recipe Creation
 
@@ -56,11 +56,11 @@ Users can modify their existing recipes or remove their posts from the applicati
 
 ### Custom Features
 
-### Category Filtering
+### Category Filtering ✅
 
 Fulfills the custom requirement for filtering and sorting. The main feed includes a custom filtering system allowing users to sort or filter recipes by category tags instantly without reloading the page.
 
-[gif goes here]
+<img src="./demo/category-filtering.gif" title="Category Filtering demo" width="600" alt="Video Walkthrough of Dishcovery category filtering" />
 
 ### Custom Recipe Cards
 
