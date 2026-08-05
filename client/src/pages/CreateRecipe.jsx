@@ -18,36 +18,40 @@ const CreateRecipe = () => {
   useEffect(() => {
     const setId = async () => {
       const user = await getCurrentUser();
-      const id = await user.id;
-
-      await setUserId(id);
-      console.log(id);
+      setUserId(user.id);
     };
-    setId();
-    console.log(ingredients);
-    if (
-      title &&
-      instructions &&
-      ingredients.length &&
-      image &&
-      categories.length
-    ) {
-      const recipe = {
-        title: title,
-        instructions: instructions,
-        image: image,
-        ingredients: ingredients,
-        category: categories,
-        user_id: userId,
-      };
-      const submitRecipe = async () => {
-        await createRecipe(recipe);
-        navigate("/");
-      };
 
-      submitRecipe();
+    setId();
+  }, []);
+
+  useEffect(() => {
+    if (
+      !userId ||
+      !title ||
+      !instructions ||
+      !ingredients.length ||
+      !image ||
+      !categories.length
+    ) {
+      return;
     }
-  }, [title, instructions, image, ingredients, categories, navigate, userId]);
+
+    const recipe = {
+      title,
+      instructions,
+      image,
+      ingredients,
+      category: categories,
+      user_id: userId,
+    };
+
+    const submitRecipe = async () => {
+      await createRecipe(recipe);
+      navigate("/");
+    };
+
+    submitRecipe();
+  }, [title, instructions, image, ingredients, categories, userId, navigate]);
 
   return (
     <RecipeForm
