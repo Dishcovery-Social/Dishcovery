@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import RecipeForm from "../components/RecipeForm.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
-import { getCurrentUser } from "../services/AuthAPI.js";
+import { uploadImage } from "../services/CloudinaryAPI.js";
 import { createRecipe } from "../services/RecipesAPI.js";
 
 const CreateRecipe = () => {
@@ -26,16 +26,16 @@ const CreateRecipe = () => {
       return;
     }
 
-    const recipe = {
-      title,
-      instructions,
-      image,
-      ingredients,
-      category: categories,
-      user_id: user.id,
-    };
-
     const submitRecipe = async () => {
+      const uploadedImage = await uploadImage(image);
+      const recipe = {
+        title,
+        instructions,
+        image: uploadedImage.url,
+        ingredients,
+        category: categories,
+        user_id: user.id,
+      };
       await createRecipe(recipe);
       navigate("/");
     };
