@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import RecipeForm from "../components/RecipeForm.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 import { getCurrentUser } from "../services/AuthAPI.js";
 import { createRecipe } from "../services/RecipesAPI.js";
 
@@ -8,25 +9,14 @@ const CreateRecipe = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [instructions, setInstructions] = useState("");
-  const [image, setImage] = useState(
-    "https://www.recipetineats.com/tachyon/2015/11/Lemon-Garlic-Chicken-Potato-Bake_7-copy.jpg?resize=900%2C1260&zoom=0.72",
-  );
+  const [image, setImage] = useState("");
   const [ingredients, setIngredients] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [userId, setUserId] = useState("");
-
-  useEffect(() => {
-    const setId = async () => {
-      const user = await getCurrentUser();
-      setUserId(user.id);
-    };
-
-    setId();
-  }, []);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (
-      !userId ||
+      !user.id ||
       !title ||
       !instructions ||
       !ingredients.length ||
@@ -42,7 +32,7 @@ const CreateRecipe = () => {
       image,
       ingredients,
       category: categories,
-      user_id: userId,
+      user_id: user.id,
     };
 
     const submitRecipe = async () => {
@@ -51,12 +41,12 @@ const CreateRecipe = () => {
     };
 
     submitRecipe();
-  }, [title, instructions, image, ingredients, categories, userId, navigate]);
+  }, [title, instructions, image, ingredients, categories, user.id, navigate]);
 
   return (
     <RecipeForm
-      username="food_gobbler"
-      profileImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgn48DSjgodT0TD3-ffVMwqefzYMBKLA5n0qSkCzlKbg&s=10"
+      username={user.username}
+      profileImage={user.profile_image}
       setTitle={setTitle}
       setInstructions={setInstructions}
       setIngredients={setIngredients}
