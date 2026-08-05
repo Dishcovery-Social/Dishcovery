@@ -1,4 +1,4 @@
-# Recipe Tracker
+# Dishcovery
 
 CodePath WEB103 Final Project
 
