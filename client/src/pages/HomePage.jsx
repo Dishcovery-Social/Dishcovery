@@ -18,7 +18,7 @@ export default function HomePage() {
     const fetchRecipesAndCategories = async () => {
       try {
         const [recipes, categories] = await Promise.all([
-          getRecipes(null),
+          getRecipes(),
           getCategories(),
         ]);
         setRecipes(recipes);
