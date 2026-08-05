@@ -26,8 +26,28 @@ const upload = async (request: RequestWithFile, response: Response) => {
           .status(400)
           .json({ error: `Could not upload file to cloudinary: ${error}` });
       } else {
-        response.status(200).json(result);
+        response.status(200).json({
+          public_id: result?.public_id,
+          url: result?.url,
+        });
       }
     })
     .end(buffer);
 };
+
+const deleteFile = async (request: Request, response: Response) => {
+  const publicId = request.body.publicId;
+  console.log(publicId);
+  try {
+    cloudinary.uploader.destroy(publicId);
+    response
+      .status(200)
+      .json(`successfully deleted file with public_id: ${publicId}`);
+  } catch (error) {
+    response
+      .status(409)
+      .json({ error: `error deleting file with public_id: ${publicId}` });
+  }
+};
+
+export { deleteFile, upload };
