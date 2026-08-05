@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import RecipeForm from "../components/RecipeForm.jsx";
+import { getCurrentUser } from "../services/AuthAPI.js";
 import { createRecipe } from "../services/RecipesAPI.js";
 
-const CreateRecipe = async () => {
+const CreateRecipe = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [instructions, setInstructions] = useState("");
@@ -12,8 +13,18 @@ const CreateRecipe = async () => {
   );
   const [ingredients, setIngredients] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [userId, setUserId] = useState("");
 
   useEffect(() => {
+    const setId = async () => {
+      const user = await getCurrentUser();
+      const id = await user.id;
+
+      await setUserId(id);
+      console.log(id);
+    };
+    setId();
+    console.log(ingredients);
     if (
       title &&
       instructions &&
@@ -26,7 +37,8 @@ const CreateRecipe = async () => {
         instructions: instructions,
         image: image,
         ingredients: ingredients,
-        categories: categories,
+        category: categories,
+        user_id: userId,
       };
       const submitRecipe = async () => {
         await createRecipe(recipe);
@@ -35,7 +47,7 @@ const CreateRecipe = async () => {
 
       submitRecipe();
     }
-  }, [title, instructions, image, ingredients, categories, navigate]);
+  }, [title, instructions, image, ingredients, categories, navigate, userId]);
 
   return (
     <RecipeForm

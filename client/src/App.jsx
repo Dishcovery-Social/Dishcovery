@@ -4,6 +4,7 @@ import { Route, Routes, useSearchParams } from "react-router";
 import Layout from "./components/Layout.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { useAuth } from "./context/AuthContext.jsx";
+import CreateRecipePage from "./pages/CreateRecipe.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import RecipeDetailsPage from "./pages/RecipeDetailsPage.jsx";
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/recipes/:id" element={<RecipeDetailsPage />} />
         <Route element={<ProtectedRoute />}>
           {/* Add the protected routes in here */}
+          <Route path="/recipes/create" element={<CreateRecipePage />} />
         </Route>
       </Route>
     </Routes>

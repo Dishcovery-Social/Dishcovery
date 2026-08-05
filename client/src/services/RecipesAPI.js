@@ -16,10 +16,10 @@ export const createRecipe = async (recipe) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(recipe),
     };
-    const response = await apiFetch(`/`, options);
-    const data = await response.json();
+    const response = await apiFetch(`/recipes`, options);
+
     console.log(`Successfully created recipe with title ${recipe.title}`);
-    return data;
+    return response;
   } catch (error) {
     console.error("Error: Could not create recipe", error);
   }

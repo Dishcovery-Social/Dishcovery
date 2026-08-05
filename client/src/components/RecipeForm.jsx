@@ -58,7 +58,7 @@ const RecipeForm = ({
       ...pendingIngredients,
       {
         name: name,
-        quantity: quantity,
+        quantity: Number(quantity),
         unit: unit,
       },
     ]);
