@@ -40,6 +40,7 @@ export default function HomePage() {
     }
     const fetchFilteredRecipes = async () => {
       try {
+        setError(null);
         setLoading(true);
         const recipes = await getRecipes(selectedCategory);
         setRecipes(recipes);
