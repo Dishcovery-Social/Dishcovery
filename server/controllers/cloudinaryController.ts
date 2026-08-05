@@ -20,29 +20,35 @@ const upload = async (request: RequestWithFile, response: Response) => {
   const buffer = file.buffer;
 
   cloudinary.uploader
-    .upload_stream({ folder: "RecipeImages" }, (error, result) => {
-      if (error) {
-        response
-          .status(400)
-          .json({ error: `Could not upload file to cloudinary: ${error}` });
-      } else {
-        response.status(200).json({
-          public_id: result?.public_id,
-          url: result?.url,
-        });
-      }
-    })
+    .upload_stream(
+      {
+        folder: "RecipeImages",
+        allowed_formats: ["jpg", "png", "jpeg", "webp"],
+        max_bytes: 10 * 1024 * 1024,
+        resource_type: "image",
+      },
+      (error, result) => {
+        if (error) {
+          response
+            .status(400)
+            .json({ error: `Could not upload file to cloudinary}` });
+        } else {
+          response.status(200).json({
+            public_id: result?.public_id,
+            url: result?.secure_url,
+          });
+        }
+      },
+    )
     .end(buffer);
 };
 
 const deleteFile = async (request: Request, response: Response) => {
   const publicId = request.body.publicId;
-  console.log(publicId);
+
   try {
-    cloudinary.uploader.destroy(publicId);
-    response
-      .status(200)
-      .json(`successfully deleted file with public_id: ${publicId}`);
+    const result = await cloudinary.uploader.destroy(publicId);
+    response.status(200).json(result);
   } catch (error) {
     response
       .status(409)
