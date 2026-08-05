@@ -57,12 +57,13 @@ export default function HomePage() {
   return (
     <>
       {loading ? (
-        <p>Loading recipe...</p>
+        <p>Loading recipes...</p>
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
         <>
           <select
+            aria-label="Filter recipes by category"
             value={selectedCategory ?? ""}
             onChange={(e) => setSelectedCategory(e.target.value || null)}
             className="mb-4 px-4 py-1.5 rounded-full border border-ink/20 bg-white text-ink text-sm font-medium appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary"
@@ -75,7 +76,11 @@ export default function HomePage() {
             ))}
           </select>
           {recipes.length === 0 ? (
-            <p>No recipes yet.</p>
+            <p>
+              {selectedCategory
+                ? "No recipes found for this category."
+                : "No recipes yet."}
+            </p>
           ) : (
             recipes.map((item) => (
               <RecipeCard
