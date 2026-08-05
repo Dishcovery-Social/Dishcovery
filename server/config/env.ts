@@ -15,6 +15,9 @@ const envSchema = z.object({
   SESSION_SECRET: z.coerce.string().min(1),
   GITHUB_CLIENT_ID: z.coerce.string().min(1),
   GITHUB_CLIENT_SECRET: z.coerce.string().min(1),
+  CLOUDINARY_CLOUD_NAME: z.coerce.string().min(1),
+  CLOUDINARY_API_KEY: z.coerce.string().min(1),
+  CLOUDINARY_API_SECRET: z.coerce.string().min(1),
 });
 
 const parsed = envSchema.parse(process.env);

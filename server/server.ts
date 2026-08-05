@@ -8,6 +8,7 @@ import { errorHandler } from "./middleware/errorHandler.js";
 import { notFound } from "./middleware/notFound.js";
 import authRouter from "./routes/auth.js";
 import categoriesRouter from "./routes/categories.js";
+import cloudinaryRouter from "./routes/cloudinary.js";
 import commentsRouter from "./routes/comments.js";
 import recipesRouter from "./routes/recipes.js";
 
@@ -41,6 +42,7 @@ app.use("/auth", authRouter);
 app.use("/recipes", recipesRouter);
 app.use("/categories", categoriesRouter);
 app.use("/recipes/:recipeId/comments", commentsRouter);
+app.use("/cloudinary", cloudinaryRouter);
 
 app.use(notFound);
 app.use(errorHandler);
