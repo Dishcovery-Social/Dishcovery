@@ -49,6 +49,7 @@ const RecipeForm = ({
   const [recipeTitle, setRecipeTitle] = useState(title);
   const [recipeInstructions, setRecipeInstructions] = useState(instructions);
   const [recipeImage, setRecipeImage] = useState(image);
+  const [imageFile, setImageFile] = useState(null);
   const navigate = useNavigate();
 
   const handleIngredientSubmit = (e) => {
@@ -58,7 +59,7 @@ const RecipeForm = ({
       ...pendingIngredients,
       {
         name: name,
-        quantity: quantity,
+        quantity: Number(quantity),
         unit: unit,
       },
     ]);
@@ -67,10 +68,9 @@ const RecipeForm = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Entered recipe submit");
     setTitle(recipeTitle);
     setInstructions(recipeInstructions);
-    setImage(recipeImage);
+    setImage(imageFile);
     setIngredients(pendingIngredients);
     setCategories(pendingCategories);
   };
@@ -108,11 +108,13 @@ const RecipeForm = ({
           <input
             type="file"
             className="file:w-1/2 file:h-40"
-            onChange={() =>
-              setRecipeImage(
-                "https://www.eatingwell.com/thmb/m5xUzIOmhWSoXZnY-oZcO9SdArQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/article_291139_the-top-10-healthiest-foods-for-kids_-02-4b745e57928c4786a61b47d8ba920058.jpg",
-              )
-            }
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (!file) return;
+              setImageFile(file);
+              setRecipeImage(URL.createObjectURL(file));
+            }}
           />
           {recipeImage && <img src={recipeImage} alt="recipe dish" />}
         </div>
